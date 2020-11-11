@@ -1,0 +1,22 @@
+dt_procedure.front.page:
+  path: '/dt/front'
+  defaults:
+    _title: 'Design Thinking'
+    _controller: 'Drupal\dt_procedure\Controller\DTProcedure::front_page'
+  requirements:
+    _permission: 'access content'
+
+dt_procedure.methods_display:
+  path: '/dt/library/{room}/{phase}'
+  defaults:
+    _controller: 'Drupal\dt_procedure\Controller\DTProcedure::display_methods'
+  requirements:
+    _permission: 'access content'
+
+dt_procedure.method_display:
+  path: '/dt/method/{termIdRoom}/{termIdPhase}'
+  defaults:
+    _controller: 'Drupal\dt_procedure\Controller\DTProcedure::getNodesByTaxonomyTermIds'
+  requirements:
+    _permission: 'access content'
+
