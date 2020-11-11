@@ -1,0 +1,11 @@
+uuid: c43b2658-28fe-4faa-b8de-8cb9ecd084de
+langcode: de
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.raum
+id: taxonomy_term.raum
+target_entity_type_id: taxonomy_term
+target_bundle: raum
+default_langcode: site_default
+language_alterable: false

@@ -1,0 +1,23 @@
+uuid: 64fd500d-1500-4702-ab6e-404557b25b07
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_geschaffte_storypoints
+    - node.type.sprint
+id: node.sprint.field_geschaffte_storypoints
+field_name: field_geschaffte_storypoints
+entity_type: node
+bundle: sprint
+label: 'Geschaffte Storypoints'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

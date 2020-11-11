@@ -1,0 +1,39 @@
+uuid: 87cef38c-1887-4d41-a26f-2cb545bf03ef
+langcode: de
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.aufgabe.body
+    - field.field.node.aufgabe.field_status
+    - field.field.node.aufgabe.field_storypoint
+    - field.field.node.aufgabe.field_verantwortlicher
+    - field.field.node.aufgabe.field_zugewiesene_personen
+    - node.type.aufgabe
+  module:
+    - text
+    - user
+id: node.aufgabe.teaser
+targetEntityType: node
+bundle: aufgabe
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_status: true
+  field_storypoint: true
+  field_verantwortlicher: true
+  field_zugewiesene_personen: true
+  langcode: true

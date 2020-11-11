@@ -1,0 +1,21 @@
+uuid: db793ad8-c58b-4052-a732-b5017471b573
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_verantwortlicher
+    - node.type.aufgabe
+id: node.aufgabe.field_verantwortlicher
+field_name: field_verantwortlicher
+entity_type: node
+bundle: aufgabe
+label: Verantwortliche(r)
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings: {  }
+field_type: entity_reference

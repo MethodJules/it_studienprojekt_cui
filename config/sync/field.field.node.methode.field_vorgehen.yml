@@ -1,0 +1,21 @@
+uuid: 447fed41-ce78-4d0b-8035-cd5efad6f146
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_vorgehen
+    - node.type.methode
+  module:
+    - text
+id: node.methode.field_vorgehen
+field_name: field_vorgehen
+entity_type: node
+bundle: methode
+label: Vorgehen
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

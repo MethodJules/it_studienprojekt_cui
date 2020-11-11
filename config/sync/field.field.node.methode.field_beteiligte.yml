@@ -1,0 +1,21 @@
+uuid: 0386cda6-33ac-4439-a49d-8011d64f98a2
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_beteiligte
+    - node.type.methode
+  module:
+    - text
+id: node.methode.field_beteiligte
+field_name: field_beteiligte
+entity_type: node
+bundle: methode
+label: Beteiligte
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

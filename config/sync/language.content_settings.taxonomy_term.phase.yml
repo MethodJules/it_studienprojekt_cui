@@ -1,0 +1,11 @@
+uuid: 502ebd6f-fd79-495b-a468-8dc41fbefd0a
+langcode: de
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.phase
+id: taxonomy_term.phase
+target_entity_type_id: taxonomy_term
+target_bundle: phase
+default_langcode: site_default
+language_alterable: false

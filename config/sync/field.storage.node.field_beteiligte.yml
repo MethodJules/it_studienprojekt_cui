@@ -1,0 +1,19 @@
+uuid: 43b73f41-5ac2-4301-9456-8958adf0b299
+langcode: de
+status: true
+dependencies:
+  module:
+    - node
+    - text
+id: node.field_beteiligte
+field_name: field_beteiligte
+entity_type: node
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,22 @@
+uuid: 41973299-44c6-47a1-976b-920aed327a39
+langcode: de
+status: true
+dependencies:
+  config:
+    - node.type.intent
+id: node.intent.promote
+field_name: promote
+entity_type: node
+bundle: intent
+label: 'Auf der Startseite anzeigen'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: An
+  off_label: Aus
+field_type: boolean

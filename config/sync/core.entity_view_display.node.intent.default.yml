@@ -1,0 +1,29 @@
+uuid: aa8e23ef-2ec7-44d5-a38f-ec5eea7343fa
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.field.node.intent.body
+    - node.type.intent
+  module:
+    - text
+    - user
+id: node.intent.default
+targetEntityType: node
+bundle: intent
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  langcode: true

@@ -1,0 +1,51 @@
+uuid: 583962b7-8c5f-4598-b29f-e446a91701e9
+langcode: de
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.methode.body
+    - field.field.node.methode.field_beispiel
+    - field.field.node.methode.field_benoetigte_zeit
+    - field.field.node.methode.field_beteiligte
+    - field.field.node.methode.field_hilfsmittel
+    - field.field.node.methode.field_nachteile
+    - field.field.node.methode.field_phase
+    - field.field.node.methode.field_raum
+    - field.field.node.methode.field_vorgehen
+    - field.field.node.methode.field_vorteile
+    - field.field.node.methode.field_ziele
+    - node.type.methode
+  module:
+    - text
+    - user
+id: node.methode.teaser
+targetEntityType: node
+bundle: methode
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_beispiel: true
+  field_benoetigte_zeit: true
+  field_beteiligte: true
+  field_hilfsmittel: true
+  field_nachteile: true
+  field_phase: true
+  field_raum: true
+  field_vorgehen: true
+  field_vorteile: true
+  field_ziele: true
+  langcode: true

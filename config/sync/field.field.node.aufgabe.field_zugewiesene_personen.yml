@@ -1,0 +1,28 @@
+uuid: 342e932d-e38c-4570-95d3-61329073e107
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_zugewiesene_personen
+    - node.type.aufgabe
+id: node.aufgabe.field_zugewiesene_personen
+field_name: field_zugewiesene_personen
+entity_type: node
+bundle: aufgabe
+label: 'Zugewiesene Personen'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    include_anonymous: true
+    filter:
+      type: _none
+    target_bundles: null
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

@@ -1,0 +1,21 @@
+uuid: 47555077-1cad-4bae-a929-1ff6384cba94
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hilfsmittel
+    - node.type.methode
+  module:
+    - text
+id: node.methode.field_hilfsmittel
+field_name: field_hilfsmittel
+entity_type: node
+bundle: methode
+label: Hilfsmittel
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

@@ -1,0 +1,14 @@
+uuid: ea1fa357-2cab-4969-8a2e-3b91c150c4cf
+name: 'IT-Studienprojekt CUI'
+mail: hoferj@uni-hildesheim.de
+slogan: ''
+page:
+  403: ''
+  404: ''
+  front: /node
+admin_compact_mode: false
+weight_select_max: 100
+langcode: de
+default_langcode: de
+_core:
+  default_config_hash: yTxtFqBHnEWxQswuWvkjE8mKw2t8oKuCL1q8KnfHuGE

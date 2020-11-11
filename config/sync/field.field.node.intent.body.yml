@@ -1,0 +1,23 @@
+uuid: 029bc4a5-d4f8-48b8-bf38-e6d0c82bce33
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.intent
+  module:
+    - text
+id: node.intent.body
+field_name: body
+entity_type: node
+bundle: intent
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+field_type: text_with_summary

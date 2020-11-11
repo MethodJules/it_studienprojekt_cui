@@ -1,0 +1,21 @@
+uuid: cb262efd-c7ea-4570-8dc5-de7d70813ea0
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_beispiel
+    - node.type.methode
+  module:
+    - text
+id: node.methode.field_beispiel
+field_name: field_beispiel
+entity_type: node
+bundle: methode
+label: Beispiel
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

@@ -1,0 +1,24 @@
+uuid: 3e9401b9-19fa-4695-9d06-162238cc3091
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_was_werde_ich_tun
+    - node.type.daily
+  module:
+    - text
+id: node.daily.field_was_werde_ich_tun
+field_name: field_was_werde_ich_tun
+entity_type: node
+bundle: daily
+label: 'Was werde ich tun?'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: Nix
+    format: basic_html
+default_value_callback: ''
+settings: {  }
+field_type: text

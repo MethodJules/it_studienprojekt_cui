@@ -1,0 +1,23 @@
+uuid: 8f205ac7-4776-46ef-8c9c-34d002956082
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_geschaetzte_storypoints
+    - node.type.sprint
+id: node.sprint.field_geschaetzte_storypoints
+field_name: field_geschaetzte_storypoints
+entity_type: node
+bundle: sprint
+label: 'Geschätzte Storypoints'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

@@ -1,0 +1,19 @@
+uuid: 429ccc26-2c2f-4e17-b7bc-b602a9fbf7ac
+langcode: de
+status: true
+dependencies:
+  module:
+    - node
+    - text
+id: node.field_beispiel
+field_name: field_beispiel
+entity_type: node
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

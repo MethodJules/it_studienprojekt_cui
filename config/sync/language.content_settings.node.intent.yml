@@ -1,0 +1,11 @@
+uuid: 801ae9ba-634d-4738-8b59-92d9fc57a3f4
+langcode: de
+status: true
+dependencies:
+  config:
+    - node.type.intent
+id: node.intent
+target_entity_type_id: node
+target_bundle: intent
+default_langcode: site_default
+language_alterable: false

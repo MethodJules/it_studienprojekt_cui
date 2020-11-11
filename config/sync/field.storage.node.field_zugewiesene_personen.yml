@@ -1,0 +1,20 @@
+uuid: 39e85e13-496d-4924-91d8-5adcb42fa37f
+langcode: de
+status: true
+dependencies:
+  module:
+    - node
+    - user
+id: node.field_zugewiesene_personen
+field_name: field_zugewiesene_personen
+entity_type: node
+type: entity_reference
+settings:
+  target_type: user
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

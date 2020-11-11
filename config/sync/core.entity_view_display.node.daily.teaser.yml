@@ -1,0 +1,37 @@
+uuid: 9a511719-9a15-41c5-8294-350d13fc7e17
+langcode: de
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.daily.body
+    - field.field.node.daily.field_was_gab_es_fuer_probleme
+    - field.field.node.daily.field_was_habe_ich_gemacht
+    - field.field.node.daily.field_was_werde_ich_tun
+    - node.type.daily
+  module:
+    - text
+    - user
+id: node.daily.teaser
+targetEntityType: node
+bundle: daily
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_was_gab_es_fuer_probleme: true
+  field_was_habe_ich_gemacht: true
+  field_was_werde_ich_tun: true
+  langcode: true

@@ -1,0 +1,21 @@
+uuid: 19b9d2b7-928f-490d-bedc-c395cfb6697c
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_benoetigte_zeit
+    - node.type.methode
+  module:
+    - text
+id: node.methode.field_benoetigte_zeit
+field_name: field_benoetigte_zeit
+entity_type: node
+bundle: methode
+label: 'Benötigte Zeit'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text

@@ -1,0 +1,23 @@
+uuid: 69a268e0-6067-484c-a105-1b03b54438ce
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.aufgabe
+  module:
+    - text
+id: node.aufgabe.body
+field_name: body
+entity_type: node
+bundle: aufgabe
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+field_type: text_with_summary

@@ -1,0 +1,22 @@
+uuid: cb19581d-9f02-4d6c-8263-48d8ef6be175
+langcode: de
+status: true
+dependencies:
+  config:
+    - node.type.sprint
+id: node.sprint.promote
+field_name: promote
+entity_type: node
+bundle: sprint
+label: 'Auf der Startseite anzeigen'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: An
+  off_label: Aus
+field_type: boolean
