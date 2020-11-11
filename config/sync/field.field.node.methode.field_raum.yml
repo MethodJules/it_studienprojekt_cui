@@ -1,0 +1,29 @@
+uuid: 027c3b9f-914c-4a8f-89e4-5ddb809ddc17
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_raum
+    - node.type.methode
+    - taxonomy.vocabulary.raum
+id: node.methode.field_raum
+field_name: field_raum
+entity_type: node
+bundle: methode
+label: Raum
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      raum: raum
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

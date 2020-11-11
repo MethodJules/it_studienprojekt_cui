@@ -1,0 +1,11 @@
+uuid: 19d12a6d-734e-4844-9f02-3f7f58667d0a
+langcode: de
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.aufgabenstatus
+id: taxonomy_term.aufgabenstatus
+target_entity_type_id: taxonomy_term
+target_bundle: aufgabenstatus
+default_langcode: site_default
+language_alterable: false

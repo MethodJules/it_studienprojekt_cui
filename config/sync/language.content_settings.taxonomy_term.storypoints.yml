@@ -1,0 +1,11 @@
+uuid: c58e1304-2dd1-4403-a133-a86cbb78010e
+langcode: de
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.storypoints
+id: taxonomy_term.storypoints
+target_entity_type_id: taxonomy_term
+target_bundle: storypoints
+default_langcode: site_default
+language_alterable: false

@@ -1,0 +1,14 @@
+uuid: 962761c3-7ce9-4ec2-8310-9791f1e553cc
+langcode: de
+status: true
+dependencies:
+  config:
+    - user.role.it_studienprojekt
+  module:
+    - user
+id: user_remove_role_action.it_studienprojekt
+label: 'Den ausgewählten Benutzern die Rolle IT Studienprojekt entziehen'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: it_studienprojekt

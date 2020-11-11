@@ -1,0 +1,11 @@
+uuid: a768d976-9b9a-471a-b59b-8b06f81a065a
+langcode: de
+status: true
+dependencies:
+  config:
+    - node.type.methode
+id: node.methode
+target_entity_type_id: node
+target_bundle: methode
+default_langcode: site_default
+language_alterable: false

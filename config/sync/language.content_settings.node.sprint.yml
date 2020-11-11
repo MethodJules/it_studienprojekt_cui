@@ -1,0 +1,11 @@
+uuid: f7c50cea-f412-4e37-91ff-70f11e9e5aed
+langcode: de
+status: true
+dependencies:
+  config:
+    - node.type.sprint
+id: node.sprint
+target_entity_type_id: node
+target_bundle: sprint
+default_langcode: site_default
+language_alterable: false

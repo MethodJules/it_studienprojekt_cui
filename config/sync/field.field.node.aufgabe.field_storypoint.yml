@@ -1,0 +1,29 @@
+uuid: 875e31a8-86ec-4060-88a2-43f77dad9ede
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_storypoint
+    - node.type.aufgabe
+    - taxonomy.vocabulary.storypoints
+id: node.aufgabe.field_storypoint
+field_name: field_storypoint
+entity_type: node
+bundle: aufgabe
+label: Storypoint
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      storypoints: storypoints
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

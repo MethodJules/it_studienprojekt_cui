@@ -1,0 +1,21 @@
+uuid: 84760cdd-2fe6-483c-bfaf-280ff5e82f3e
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_nachteile
+    - node.type.methode
+  module:
+    - text
+id: node.methode.field_nachteile
+field_name: field_nachteile
+entity_type: node
+bundle: methode
+label: Nachteile
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

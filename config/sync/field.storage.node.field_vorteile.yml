@@ -1,0 +1,19 @@
+uuid: 9bd94d60-b48a-408d-8a74-0791114a2ad5
+langcode: de
+status: true
+dependencies:
+  module:
+    - node
+    - text
+id: node.field_vorteile
+field_name: field_vorteile
+entity_type: node
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,11 @@
+uuid: dac57679-7649-4cf5-aed4-a86bb9247da6
+langcode: de
+status: true
+dependencies:
+  config:
+    - node.type.daily
+id: node.daily
+target_entity_type_id: node
+target_bundle: daily
+default_langcode: site_default
+language_alterable: false

@@ -1,0 +1,24 @@
+uuid: d9614758-3313-4601-a284-2c9c10c69d90
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_was_gab_es_fuer_probleme
+    - node.type.daily
+  module:
+    - text
+id: node.daily.field_was_gab_es_fuer_probleme
+field_name: field_was_gab_es_fuer_probleme
+entity_type: node
+bundle: daily
+label: 'Was gab es für Probleme?'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: keine
+    format: basic_html
+default_value_callback: ''
+settings: {  }
+field_type: text

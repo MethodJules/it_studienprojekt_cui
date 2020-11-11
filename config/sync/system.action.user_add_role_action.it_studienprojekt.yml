@@ -1,0 +1,14 @@
+uuid: 221409ac-b4ca-45ac-bf65-d838406980c6
+langcode: de
+status: true
+dependencies:
+  config:
+    - user.role.it_studienprojekt
+  module:
+    - user
+id: user_add_role_action.it_studienprojekt
+label: 'Den ausgewählten Benutzern die Rolle IT Studienprojekt zuweisen'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: it_studienprojekt

@@ -1,0 +1,18 @@
+uuid: 0ab2e8d4-c679-425f-98fa-a255e589fbe1
+langcode: de
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: Methode
+type: methode
+description: 'Hier wird eine Methode angelegt.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true

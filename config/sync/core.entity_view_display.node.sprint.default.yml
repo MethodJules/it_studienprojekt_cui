@@ -1,0 +1,49 @@
+uuid: c99a6492-9219-458b-ae52-c1f95d7a464e
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.field.node.sprint.body
+    - field.field.node.sprint.field_geschaetzte_storypoints
+    - field.field.node.sprint.field_geschaffte_storypoints
+    - node.type.sprint
+  module:
+    - text
+    - user
+id: node.sprint.default
+targetEntityType: node
+bundle: sprint
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_geschaetzte_storypoints:
+    weight: 102
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  field_geschaffte_storypoints:
+    weight: 103
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  langcode: true

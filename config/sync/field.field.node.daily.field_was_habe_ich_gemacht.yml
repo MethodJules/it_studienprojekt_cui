@@ -1,0 +1,24 @@
+uuid: e2b22b83-7b5d-4291-b333-d1dd4b1fd090
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_was_habe_ich_gemacht
+    - node.type.daily
+  module:
+    - text
+id: node.daily.field_was_habe_ich_gemacht
+field_name: field_was_habe_ich_gemacht
+entity_type: node
+bundle: daily
+label: 'Was habe ich gemacht?'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: Nix
+    format: basic_html
+default_value_callback: ''
+settings: {  }
+field_type: text

@@ -1,0 +1,35 @@
+uuid: a6e7178e-8482-4fe0-9e19-fb559f4dd0d4
+langcode: de
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.sprint.body
+    - field.field.node.sprint.field_geschaetzte_storypoints
+    - field.field.node.sprint.field_geschaffte_storypoints
+    - node.type.sprint
+  module:
+    - text
+    - user
+id: node.sprint.teaser
+targetEntityType: node
+bundle: sprint
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_geschaetzte_storypoints: true
+  field_geschaffte_storypoints: true
+  langcode: true

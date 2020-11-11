@@ -1,0 +1,20 @@
+uuid: 73efa069-0eb8-4d16-be00-35a6b31e6363
+langcode: de
+status: true
+dependencies:
+  module:
+    - node
+    - text
+id: node.field_was_habe_ich_gemacht
+field_name: field_was_habe_ich_gemacht
+entity_type: node
+type: text
+settings:
+  max_length: 1024
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

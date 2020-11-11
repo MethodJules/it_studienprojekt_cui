@@ -1,0 +1,9 @@
+dt-procedure:
+  version: 1.x
+  js:
+    js/d3.min.js: {}
+    js/dt_front.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/drupalSettings

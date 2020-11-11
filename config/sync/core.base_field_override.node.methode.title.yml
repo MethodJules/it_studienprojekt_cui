@@ -1,0 +1,18 @@
+uuid: 1deec71b-9814-4662-8d59-ddba0e49bbdf
+langcode: de
+status: true
+dependencies:
+  config:
+    - node.type.methode
+id: node.methode.title
+field_name: title
+entity_type: node
+bundle: methode
+label: 'Name der Methode'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

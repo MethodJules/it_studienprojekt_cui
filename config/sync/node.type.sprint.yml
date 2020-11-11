@@ -1,0 +1,18 @@
+uuid: 605ef597-4a78-4500-a2a6-20546fa0e3db
+langcode: de
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: Sprint
+type: sprint
+description: ''
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true

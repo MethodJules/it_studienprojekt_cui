@@ -1,0 +1,8 @@
+uuid: b604c8df-bf78-48e7-874c-26f8c5cd89d0
+langcode: de
+status: true
+dependencies: {  }
+name: Aufgabenstatus
+vid: aufgabenstatus
+description: ''
+weight: 0

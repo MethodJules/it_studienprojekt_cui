@@ -1,0 +1,18 @@
+uuid: 9e58ef56-5538-471d-91c6-43489fb85b96
+langcode: de
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: Daily
+type: daily
+description: 'Hier wird ein Eintrag für einen Daily-Sprint angelegt.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true

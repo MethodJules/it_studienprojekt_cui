@@ -1,0 +1,21 @@
+uuid: 4426151e-1811-4267-802a-03ce0c561a20
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ziele
+    - node.type.methode
+  module:
+    - text
+id: node.methode.field_ziele
+field_name: field_ziele
+entity_type: node
+bundle: methode
+label: Ziele
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

@@ -1,0 +1,18 @@
+uuid: 092a3412-6d21-4d9f-b66f-11a2b6299ee2
+langcode: de
+status: true
+dependencies:
+  config:
+    - node.type.intent
+id: node.intent.title
+field_name: title
+entity_type: node
+bundle: intent
+label: 'Name des Intents'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

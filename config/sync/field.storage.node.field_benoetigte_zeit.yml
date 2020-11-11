@@ -1,0 +1,20 @@
+uuid: b370b622-5c8a-4fe2-b322-3be1d0dddd5b
+langcode: de
+status: true
+dependencies:
+  module:
+    - node
+    - text
+id: node.field_benoetigte_zeit
+field_name: field_benoetigte_zeit
+entity_type: node
+type: text
+settings:
+  max_length: 255
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

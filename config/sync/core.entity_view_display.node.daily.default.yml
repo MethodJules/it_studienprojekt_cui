@@ -1,0 +1,53 @@
+uuid: 653d3eeb-c099-4aec-b3a2-3414ad5702f9
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.field.node.daily.body
+    - field.field.node.daily.field_was_gab_es_fuer_probleme
+    - field.field.node.daily.field_was_habe_ich_gemacht
+    - field.field.node.daily.field_was_werde_ich_tun
+    - node.type.daily
+  module:
+    - text
+    - user
+id: node.daily.default
+targetEntityType: node
+bundle: daily
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_was_gab_es_fuer_probleme:
+    weight: 104
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_was_habe_ich_gemacht:
+    weight: 102
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_was_werde_ich_tun:
+    weight: 103
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  langcode: true

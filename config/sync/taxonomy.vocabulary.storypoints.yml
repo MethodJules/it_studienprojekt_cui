@@ -1,0 +1,8 @@
+uuid: 10ba0373-d9b7-4137-a564-686d989a1655
+langcode: de
+status: true
+dependencies: {  }
+name: Storypoints
+vid: storypoints
+description: ''
+weight: 0

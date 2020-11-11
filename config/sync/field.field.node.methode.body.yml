@@ -1,0 +1,23 @@
+uuid: 95912726-1561-4c1d-bc05-9343d781b8d9
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.methode
+  module:
+    - text
+id: node.methode.body
+field_name: body
+entity_type: node
+bundle: methode
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+field_type: text_with_summary
