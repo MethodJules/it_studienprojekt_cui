@@ -756,13 +756,13 @@ $settings['entity_update_backup'] = TRUE;
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
 $databases['default']['default'] = array (
-  'database' => 'chatbots',
-  'username' => 'root',
-  'password' => 'chatbots',
+  'database' => 'it-studienprojek',
+  'username' => 'it-studienprojek',
+  'password' => 'mahphe4ooPhi',
   'prefix' => '',
-  'host' => 'database',
+  'host' => '10.0.3.105',
   'port' => '3306',
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
   'driver' => 'mysql',
 );
-$settings['config_sync_directory'] = 'sites/default/files/config_0fLTm8iLn44oNQx1CI-6Nl2uXFE3LjvwdDWwCkbPkko1lSKk2OxhzGiqpGLYFhqiFEFxGVswFg/sync';
+$settings['config_sync_directory'] = '../config/sync';
