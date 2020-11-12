@@ -2,3 +2,5 @@
 database/
 
 *.sql
+
+web/sites/default/settings.php
