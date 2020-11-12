@@ -1,0 +1,20 @@
+uuid: 29892493-2c32-4802-910f-2d41ceabbe1b
+langcode: de
+status: true
+dependencies:
+  module:
+    - datetime
+    - node
+id: node.field_endzeit_des_treffens
+field_name: field_endzeit_des_treffens
+entity_type: node
+type: datetime
+settings:
+  datetime_type: datetime
+module: datetime
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

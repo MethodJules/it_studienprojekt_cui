@@ -1,0 +1,19 @@
+uuid: b52fa889-5bf9-4a0c-9949-fadb169161e4
+langcode: de
+status: true
+dependencies:
+  module:
+    - node
+    - text
+id: node.field_planung
+field_name: field_planung
+entity_type: node
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

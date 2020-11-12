@@ -1,0 +1,37 @@
+uuid: 3d699ce4-e969-4758-b98e-9f7a3cfac11c
+langcode: de
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.methodendurchfuehrung.body
+    - field.field.node.methodendurchfuehrung.field_aufgabe
+    - field.field.node.methodendurchfuehrung.field_grund_der_methodenwahl
+    - field.field.node.methodendurchfuehrung.field_methode
+    - node.type.methodendurchfuehrung
+  module:
+    - text
+    - user
+id: node.methodendurchfuehrung.teaser
+targetEntityType: node
+bundle: methodendurchfuehrung
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_aufgabe: true
+  field_grund_der_methodenwahl: true
+  field_methode: true
+  langcode: true

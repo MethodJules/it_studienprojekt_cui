@@ -1,0 +1,21 @@
+uuid: fdba8bc9-50d1-49ad-a3a0-b434b5308bc6
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_startzeit_des_treffens
+    - node.type.protokoll
+  module:
+    - datetime
+id: node.protokoll.field_startzeit_des_treffens
+field_name: field_startzeit_des_treffens
+entity_type: node
+bundle: protokoll
+label: 'Startzeit des Treffens'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

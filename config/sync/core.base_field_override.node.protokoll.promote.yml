@@ -1,0 +1,22 @@
+uuid: d2dc490e-4a1d-4743-ad96-d62d82f322a2
+langcode: de
+status: true
+dependencies:
+  config:
+    - node.type.protokoll
+id: node.protokoll.promote
+field_name: promote
+entity_type: node
+bundle: protokoll
+label: 'Auf der Startseite anzeigen'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: An
+  off_label: Aus
+field_type: boolean

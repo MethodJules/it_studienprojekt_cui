@@ -1,0 +1,28 @@
+uuid: ad491f87-d46b-409e-bb2a-f068c22502b2
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_methode
+    - node.type.methode
+    - node.type.methodendurchfuehrung
+id: node.methodendurchfuehrung.field_methode
+field_name: field_methode
+entity_type: node
+bundle: methodendurchfuehrung
+label: Methode
+description: 'Bitte wählen Sie hier eine Methode aus, die sie in Ihrer Sitzung verwenden werden.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      methode: methode
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

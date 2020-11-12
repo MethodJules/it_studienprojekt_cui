@@ -1,23 +1,19 @@
-uuid: 9fbe1ba8-710b-4880-ad85-fa094359e518
+uuid: 22614060-3ef7-42b5-aa8f-e8b7c06a4377
 langcode: de
 status: true
 dependencies:
   config:
-    - field.field.node.aufgabe.body
-    - field.field.node.aufgabe.field_deadline
-    - field.field.node.aufgabe.field_prioritaet
-    - field.field.node.aufgabe.field_status
-    - field.field.node.aufgabe.field_storypoint
-    - field.field.node.aufgabe.field_verantwortlicher
-    - field.field.node.aufgabe.field_zugewiesene_personen
-    - node.type.aufgabe
+    - field.field.node.methodendurchfuehrung.body
+    - field.field.node.methodendurchfuehrung.field_aufgabe
+    - field.field.node.methodendurchfuehrung.field_grund_der_methodenwahl
+    - field.field.node.methodendurchfuehrung.field_methode
+    - node.type.methodendurchfuehrung
   module:
-    - datetime
     - path
     - text
-id: node.aufgabe.default
+id: node.methodendurchfuehrung.default
 targetEntityType: node
-bundle: aufgabe
+bundle: methodendurchfuehrung
 mode: default
 content:
   body:
@@ -36,14 +32,8 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_deadline:
-    weight: 126
-    settings: {  }
-    third_party_settings: {  }
-    type: datetime_default
-    region: content
-  field_prioritaet:
-    weight: 127
+  field_aufgabe:
+    weight: 124
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -52,34 +42,16 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
-  field_status:
+  field_grund_der_methodenwahl:
     weight: 123
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
+      rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: text_textarea
     region: content
-  field_storypoint:
-    weight: 125
-    settings: {  }
-    third_party_settings: {  }
-    type: options_select
-    region: content
-  field_verantwortlicher:
+  field_methode:
     weight: 122
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  field_zugewiesene_personen:
-    weight: 124
     settings:
       match_operator: CONTAINS
       match_limit: 10

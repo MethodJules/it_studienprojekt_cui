@@ -1,0 +1,49 @@
+uuid: 41d1b680-4f60-42a9-a0c6-cc99f340ea35
+langcode: de
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.protokoll.body
+    - field.field.node.protokoll.field_art_des
+    - field.field.node.protokoll.field_endzeit_des_treffens
+    - field.field.node.protokoll.field_methodendurchfuehrung
+    - field.field.node.protokoll.field_ort_des_treffens
+    - field.field.node.protokoll.field_planung
+    - field.field.node.protokoll.field_rueckblick
+    - field.field.node.protokoll.field_startzeit_des_treffens
+    - field.field.node.protokoll.field_teilnehmer_des_treffens
+    - field.field.node.protokoll.field_zusammenfassung_des_treffe
+    - node.type.protokoll
+  module:
+    - text
+    - user
+id: node.protokoll.teaser
+targetEntityType: node
+bundle: protokoll
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_art_des: true
+  field_endzeit_des_treffens: true
+  field_methodendurchfuehrung: true
+  field_ort_des_treffens: true
+  field_planung: true
+  field_rueckblick: true
+  field_startzeit_des_treffens: true
+  field_teilnehmer_des_treffens: true
+  field_zusammenfassung_des_treffe: true
+  langcode: true

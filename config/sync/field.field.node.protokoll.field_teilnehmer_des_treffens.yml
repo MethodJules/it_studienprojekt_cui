@@ -1,0 +1,28 @@
+uuid: 4a1d89f1-f195-4997-b04e-de1fcf346fa5
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_teilnehmer_des_treffens
+    - node.type.protokoll
+id: node.protokoll.field_teilnehmer_des_treffens
+field_name: field_teilnehmer_des_treffens
+entity_type: node
+bundle: protokoll
+label: 'Teilnehmer des Treffens'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    include_anonymous: true
+    filter:
+      type: _none
+    target_bundles: null
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

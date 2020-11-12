@@ -1,0 +1,8 @@
+uuid: 663f131d-e694-453c-8f87-9c00f9a8cad5
+langcode: de
+status: true
+dependencies: {  }
+name: Priorität
+vid: prioritaet
+description: ''
+weight: 0

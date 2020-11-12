@@ -1,0 +1,19 @@
+uuid: efd898e2-e71f-4502-b633-a162ed6eae1b
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ort_des_treffens
+    - node.type.protokoll
+id: node.protokoll.field_ort_des_treffens
+field_name: field_ort_des_treffens
+entity_type: node
+bundle: protokoll
+label: 'Ort des Treffens'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

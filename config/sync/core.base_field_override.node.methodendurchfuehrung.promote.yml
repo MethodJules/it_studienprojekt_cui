@@ -1,0 +1,22 @@
+uuid: 01240648-d71b-483e-a130-67d1c8512568
+langcode: de
+status: true
+dependencies:
+  config:
+    - node.type.methodendurchfuehrung
+id: node.methodendurchfuehrung.promote
+field_name: promote
+entity_type: node
+bundle: methodendurchfuehrung
+label: 'Auf der Startseite anzeigen'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: An
+  off_label: Aus
+field_type: boolean

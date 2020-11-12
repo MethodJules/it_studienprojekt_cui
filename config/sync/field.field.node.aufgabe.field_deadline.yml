@@ -1,0 +1,21 @@
+uuid: 27b0e4ae-cbff-495c-9cba-3023b8aa1736
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_deadline
+    - node.type.aufgabe
+  module:
+    - datetime
+id: node.aufgabe.field_deadline
+field_name: field_deadline
+entity_type: node
+bundle: aufgabe
+label: Deadline
+description: 'Bitte geben Sie hier die Deadline für die Aufgabe ein.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime
