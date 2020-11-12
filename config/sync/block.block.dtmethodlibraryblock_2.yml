@@ -2,10 +2,6 @@ uuid: dc442cdf-eefe-4575-8482-0c8fbfd448e2
 langcode: de
 status: true
 dependencies:
-  content:
-    - 'block_content:basic:70174bad-9a7f-4dbb-8876-165d325d6e5b'
-  module:
-    - block_content
   theme:
     - bartik
 id: dtmethodlibraryblock_2
@@ -17,7 +13,7 @@ plugin: 'block_content:70174bad-9a7f-4dbb-8876-165d325d6e5b'
 settings:
   id: 'block_content:70174bad-9a7f-4dbb-8876-165d325d6e5b'
   label: 'DT Method Library Block'
-  provider: block_content
+  provider: core
   label_display: visible
   status: true
   info: ''
