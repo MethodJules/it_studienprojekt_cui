@@ -1,0 +1,7 @@
+dt_alexa.methoden:
+  path: /dt_alexa/methoden/{raum}/{phase}
+  defaults:
+    _title: 'Methoden'
+    _controller: 'Drupal\dt_alexa\Controller\DTAlexaController::getMethods'
+  requirements:
+    _permission: 'access content'

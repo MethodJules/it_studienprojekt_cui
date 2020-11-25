@@ -16,11 +16,14 @@
     ],
     "require": {
         "composer/installers": "^1.2",
+        "drupal/alexa": "^1.0@RC",
         "drupal/cas": "^1.6",
+        "drupal/chatbot_api": "^1.0",
         "drupal/core-composer-scaffold": "^8.8",
         "drupal/core-project-message": "^8.8",
         "drupal/core-recommended": "^8.8",
-        "drush/drush": "^10.2"
+        "drupal/devel": "^4.0",
+        "drush/drush": "^10.3"
     },
     "conflict": {
         "drupal/drupal": "*"

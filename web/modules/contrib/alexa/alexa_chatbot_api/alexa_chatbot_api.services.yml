@@ -1,0 +1,6 @@
+services:
+  alexa_chatbot_api.request_subscriber:
+    class: Drupal\alexa_chatbot_api\EventSubscriber\RequestSubscriber
+    arguments: ['@plugin.manager.chatbot_intent_plugin']
+    tags:
+      - { name: event_subscriber }

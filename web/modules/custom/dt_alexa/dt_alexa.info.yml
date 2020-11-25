@@ -1,0 +1,5 @@
+name: DT-Alexa
+description: Module for an Design Thinking Skill for Alexa
+type: module
+core: 8.x
+package: Alexa

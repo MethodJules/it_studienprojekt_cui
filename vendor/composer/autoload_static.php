@@ -148,6 +148,7 @@ class ComposerStaticInitd08f9f199e0e29ab886a8e60d21b07a0
         'A' => 
         array (
             'Asm89\\Stack\\' => 12,
+            'Alexa\\' => 6,
         ),
     );
 
@@ -444,6 +445,10 @@ class ComposerStaticInitd08f9f199e0e29ab886a8e60d21b07a0
         array (
             0 => __DIR__ . '/..' . '/asm89/stack-cors/src/Asm89/Stack',
         ),
+        'Alexa\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jakubsuchy/amazon-alexa-php/src',
+        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -521,6 +526,7 @@ class ComposerStaticInitd08f9f199e0e29ab886a8e60d21b07a0
         'Error' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/Error.php',
         'ParseError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/ParseError.php',
         'SessionUpdateTimestampHandlerInterface' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/SessionUpdateTimestampHandlerInterface.php',
+        'Spoons\\ScriptHandler' => __DIR__ . '/../..' . '/web/modules/contrib/devel/.spoons/ScriptHandler.php',
         'TypeError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/TypeError.php',
     );
 

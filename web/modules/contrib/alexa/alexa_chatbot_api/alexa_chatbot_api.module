@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains alexa_chatbot_api.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function alexa_chatbot_api_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the alexa_chatbot_api module.
+    case 'help.page.alexa_chatbot_api':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Alexa driver for Chatbot API') . '</p>';
+      return $output;
+
+    default:
+  }
+}
