@@ -23,7 +23,8 @@
         "drupal/core-project-message": "^8.8",
         "drupal/core-recommended": "^8.8",
         "drupal/devel": "^4.0",
-        "drush/drush": "^10.3"
+        "drush/drush": "^10.3",
+        "kint-php/kint": "^3.3"
     },
     "conflict": {
         "drupal/drupal": "*"

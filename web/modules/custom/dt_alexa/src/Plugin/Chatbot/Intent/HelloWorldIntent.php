@@ -43,7 +43,7 @@ class HelloWorldIntent extends IntentPluginBase  {
             #Falls nach der Anzahl an Methoden gefragt ist
             $num = count($array);
             $output = 'Ich kenne '. strval($num) . ' Methoden.';
-        } */
+        } 
 
         #$output = 'Phase: ' . $phase . ', Raum: ' . $raum . ' und Anzahl: ' . $anzahl;
         

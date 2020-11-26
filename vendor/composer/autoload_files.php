@@ -27,4 +27,5 @@ return array(
     '40360c0b9b437e69bcbb7f1349ce029e' => $vendorDir . '/zendframework/zend-diactoros/src/functions/parse_cookie_header.php',
     '952683d815ff0a7bf322b93c0be7e4e4' => $vendorDir . '/chi-teck/drupal-code-generator/src/bootstrap.php',
     '801c31d8ed748cfa537fa45402288c95' => $vendorDir . '/psy/psysh/src/functions.php',
+    '3917c79c5052b270641b5a200963dbc2' => $vendorDir . '/kint-php/kint/init.php',
 );

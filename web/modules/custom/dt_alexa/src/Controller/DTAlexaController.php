@@ -2,6 +2,7 @@
 namespace Drupal\dt_alexa\Controller;
 
 use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
 
 class DTAlexaController {
     public function getMethods($raum, $phase) {
@@ -12,16 +13,16 @@ class DTAlexaController {
         $entity_ids = $query->execute();
         #dsm($entity_ids);
         $array = array();
-        $nodes = Node::loadMultiple($entity_ids);
-        foreach ($nodes as $node) {
-            $title = $node->getTitle();
-            $raum = $node->field_raum->value;
-            dsm($title);
-            dsm($raum);
-            /* foreach ($node->field_raum as $reference) {
-                dsm($reference);
-            } */
-
+        $nodes = Node::loadMultiple($entity_ids); //Damit werden alle nodes gleichzeitig geholt
+        //Iteriere über alle node-Objekte
+        foreach ($nodes as $node) {            
+            $term = Term::load($node->get('field_raum')->target_id); //Hole das Term-Objekt des Feldes field_raum
+            //Da manche Term-Objekte noch null sind, da unser aktueller DB-Stand das abbildet muss das geprueft werden,
+            //sonst wird ein Fehler geworfen
+            if(!is_null($term)) {
+                $raum = $term->getName();
+                ksm($raum); // Hier dann tauschen mit dsm(). Ich habe hier Kint als Debug Modul installiert (https://www.drupal.org/docs/contributed-modules/devel/installation-whats-in-the-box)
+            }
         }
 
         /* foreach ($entity_ids as $key => $value) {
