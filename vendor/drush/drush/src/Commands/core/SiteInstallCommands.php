@@ -3,7 +3,6 @@ namespace Drush\Commands\core;
 
 use Composer\Semver\Comparator;
 use Consolidation\AnnotatedCommand\CommandData;
-use Consolidation\SiteProcess\ProcessBase;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Installer\Exception\AlreadyInstalledException;
@@ -147,7 +146,7 @@ class SiteInstallCommands extends DrushCommands implements SiteAliasManagerAware
         // This can lead to an exit() in Drupal. See install_display_output() (e.g. config validation failure).
         // @todo Get Drupal to not call that function when on the CLI.
         try {
-            drush_op('install_drupal', $class_loader, $settings);
+            drush_op('install_drupal', $class_loader, $settings, [$this, 'taskCallback']);
         } catch (AlreadyInstalledException $e) {
             if ($sql && !$this->programExists($sql->command())) {
                 throw new \Exception(dt('Drush was unable to drop all tables because `@program` was not found, and therefore Drupal threw an AlreadyInstalledException. Ensure `@program` is available in your PATH.', ['@program' => $sql->command()]));
@@ -161,6 +160,12 @@ class SiteInstallCommands extends DrushCommands implements SiteAliasManagerAware
             $this->logger()->success(dt('Installation complete.'));
         }
     }
+
+    public function taskCallback($install_state)
+    {
+        $this->logger()->notice('Performed install task: {task}', ['task' => $install_state['active_task']]);
+    }
+
 
     protected function determineProfile($profile, $options, $class_loader)
     {
@@ -337,24 +342,31 @@ class SiteInstallCommands extends DrushCommands implements SiteAliasManagerAware
         $default = realpath(Path::join($root, 'sites/default'));
         $sitesfile_write = realpath($confPath) != $default && !file_exists($sitesfile);
 
+        $msg = [];
         if (!file_exists($settingsfile)) {
-            $msg[] = dt('create a @settingsfile file', ['@settingsfile' => $settingsfile]);
+            $msg[] = dt('Create a @settingsfile file', ['@settingsfile' => $settingsfile]);
         }
         if ($sitesfile_write) {
-            $msg[] = dt('create a @sitesfile file', ['@sitesfile' => $sitesfile]);
+            $msg[] = dt('Create a @sitesfile file', ['@sitesfile' => $sitesfile]);
         }
 
         $program = $sql ? $sql->command() : 'UNKNOWN';
         $program_exists = $this->programExists($program);
         if (!$program_exists) {
-            $msg[] = dt('Program @program not found. Proceed if you have already created or emptied the Drupal database.', ['@program' => $program]);
+            $this->logger()->warning(dt('Program @program not found. Proceed if you have already created or emptied the Drupal database.', ['@program' => $program]));
         } elseif ($sql->dbExists()) {
             $msg[] = dt("DROP all tables in your '@db' database.", ['@db' => $db_spec['database']]);
         } else {
             $msg[] = dt("CREATE the '@db' database.", ['@db' => $db_spec['database']]);
         }
 
-        if (!$this->io()->confirm(dt('You are about to ') . implode(dt(' and '), $msg) . ' Do you want to continue?')) {
+        if ($msg) {
+            $this->io()->text(dt('You are about to:'));
+            $this->io()->listing($msg);
+        }
+
+
+        if (!$this->io()->confirm(dt('Do you want to continue?'))) {
             throw new UserAbortException();
         }
 

@@ -1,0 +1,14 @@
+name: Chatbot API - Alexa
+type: module
+description: Alexa driver for Chatbot API
+# core: 8.x
+package: Chatbot
+dependencies:
+  - alexa:alexa
+  - chatbot_api:chatbot_api
+
+# Information added by Drupal.org packaging script on 2018-09-11
+version: '8.x-1.0'
+core: '8.x'
+project: 'chatbot_api'
+datestamp: 1536661684
