@@ -33,7 +33,7 @@ class MessagePlugin implements PluginInterface, EventSubscriberInterface {
   /**
    * Configuration.
    *
-   * @var \Drupal\Composer\VendorHardening\Config
+   * @var \Drupal\Composer\Plugin\VendorHardening\Config
    */
   protected $config;
 
@@ -43,6 +43,18 @@ class MessagePlugin implements PluginInterface, EventSubscriberInterface {
   public function activate(Composer $composer, IOInterface $io) {
     $this->composer = $composer;
     $this->io = $io;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deactivate(Composer $composer, IOInterface $io) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function uninstall(Composer $composer, IOInterface $io) {
   }
 
   /**

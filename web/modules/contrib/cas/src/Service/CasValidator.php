@@ -2,8 +2,10 @@
 
 namespace Drupal\cas\Service;
 
+use Drupal\cas\CasServerConfig;
 use Drupal\cas\Event\CasPostValidateEvent;
 use Drupal\cas\Event\CasPreValidateEvent;
+use Drupal\cas\Event\CasPreValidateServerConfigEvent;
 use Drupal\cas\Exception\CasValidateException;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -95,7 +97,54 @@ class CasValidator {
    *   if there was a local configuration issue.
    */
   public function validateTicket($ticket, array $service_params = []) {
-    $validate_url = $this->getServerValidateUrl($ticket, $service_params);
+    $casServerConfig = CasServerConfig::createFromModuleConfig($this->settings);
+    // Allow modules to modify the server config before it's used to validate
+    // the login ticket.
+    $event = new CasPreValidateServerConfigEvent($casServerConfig);
+    $this->eventDispatcher->dispatch(CasHelper::EVENT_PRE_VALIDATE_SERVER_CONFIG, $event);
+
+    // Determine the path to send the validation request to on the CAS server.
+    $path = '';
+    switch ($casServerConfig->getProtocolVerison()) {
+      case "1.0":
+        $path = 'validate';
+        break;
+
+      case "2.0":
+        if ($this->settings->get('proxy.can_be_proxied')) {
+          $path = 'proxyValidate';
+        }
+        else {
+          $path = 'serviceValidate';
+        }
+        break;
+
+      case "3.0":
+        if ($this->settings->get('proxy.can_be_proxied')) {
+          $path = 'p3/proxyValidate';
+        }
+        else {
+          $path = 'p3/serviceValidate';
+        }
+        break;
+    }
+
+    $params = [];
+    $params['service'] = $this->urlGenerator->generate('cas.service', $service_params, UrlGeneratorInterface::ABSOLUTE_URL);
+    $params['ticket'] = $ticket;
+    if ($this->settings->get('proxy.initialize')) {
+      $params['pgtUrl'] = $this->formatProxyCallbackUrl();
+    }
+
+    // Dispatch an event that allows modules to alter the validation path or
+    // URL parameters.
+    $pre_validate_event = new CasPreValidateEvent($path, $params);
+    $this->eventDispatcher->dispatch(CasHelper::EVENT_PRE_VALIDATE, $pre_validate_event);
+    $validate_url = $casServerConfig->getServerBaseUrl() . $pre_validate_event->getValidationPath();
+    if (!empty($pre_validate_event->getParameters())) {
+      $validate_url .= '?' . UrlHelper::buildQuery($pre_validate_event->getParameters());
+    }
+
     $this->casHelper->log(
       LogLevel::DEBUG,
       'Attempting to validate service ticket %ticket by making request to URL %url',
@@ -103,7 +152,7 @@ class CasValidator {
     );
 
     try {
-      $response = $this->httpClient->get($validate_url, $this->casHelper->getCasServerConnectionOptions());
+      $response = $this->httpClient->get($validate_url, $casServerConfig->getCasServerGuzzleConnectionOptions());
       $response_data = $response->getBody()->__toString();
       $this->casHelper->log(LogLevel::DEBUG, "Validation response received from CAS server: %data", ['%data' => $response_data]);
     }
@@ -111,7 +160,7 @@ class CasValidator {
       throw new CasValidateException("Error with request to validate ticket: " . $e->getMessage());
     }
 
-    $protocol_version = $this->settings->get('server.version');
+    $protocol_version = $casServerConfig->getProtocolVerison();
     switch ($protocol_version) {
       case "1.0":
         $cas_property_bag = $this->validateVersion1($response_data);
@@ -127,7 +176,7 @@ class CasValidator {
       throw new CasValidateException('Unknown CAS protocol version specified: ' . $protocol_version);
     }
 
-    // Dispatch an event that allows others to alter the Cas property bag.
+    // Dispatch an event that allows modules to alter the CAS property bag.
     $event = new CasPostValidateEvent($response_data, $cas_property_bag);
     $this->eventDispatcher->dispatch(CasHelper::EVENT_POST_VALIDATE, $event);
     return $event->getCasPropertyBag();
@@ -381,59 +430,6 @@ class CasValidator {
       ['%attributes' => print_r($attributes, TRUE)]
     );
     return $attributes;
-  }
-
-  /**
-   * Return the validation URL used to validate the provided ticket.
-   *
-   * @param string $ticket
-   *   The ticket to validate.
-   * @param array $service_params
-   *   An array of query string parameters to add to the service URL.
-   *
-   * @return string
-   *   The fully constructed validation URL.
-   */
-  public function getServerValidateUrl($ticket, array $service_params = []) {
-    $validate_url = $this->casHelper->getServerBaseUrl();
-    $path = '';
-    switch ($this->settings->get('server.version')) {
-      case "1.0":
-        $path = 'validate';
-        break;
-
-      case "2.0":
-        if ($this->settings->get('proxy.can_be_proxied')) {
-          $path = 'proxyValidate';
-        }
-        else {
-          $path = 'serviceValidate';
-        }
-        break;
-
-      case "3.0":
-        if ($this->settings->get('proxy.can_be_proxied')) {
-          $path = 'p3/proxyValidate';
-        }
-        else {
-          $path = 'p3/serviceValidate';
-        }
-        break;
-    }
-
-    $params = [];
-    $params['service'] = $this->urlGenerator->generate('cas.service', $service_params, UrlGeneratorInterface::ABSOLUTE_URL);
-    $params['ticket'] = $ticket;
-    if ($this->settings->get('proxy.initialize')) {
-      $params['pgtUrl'] = $this->formatProxyCallbackUrl();
-    }
-
-    // Dispatch an event that allows modules to alter the validation path or
-    // URL parameters.
-    $pre_validate_event = new CasPreValidateEvent($path, $params);
-    $this->eventDispatcher->dispatch(CasHelper::EVENT_PRE_VALIDATE, $pre_validate_event);
-    $validate_url .= $pre_validate_event->getValidationPath();
-    return $validate_url . '?' . UrlHelper::buildQuery($pre_validate_event->getParameters());
   }
 
   /**

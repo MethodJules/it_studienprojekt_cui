@@ -1,0 +1,29 @@
+uuid: 3011c61d-1436-4cc9-ac2c-95edefcd6e1e
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_prioritaet
+    - node.type.aufgabe
+    - taxonomy.vocabulary.prioritaet
+id: node.aufgabe.field_prioritaet
+field_name: field_prioritaet
+entity_type: node
+bundle: aufgabe
+label: Priorität
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      prioritaet: prioritaet
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

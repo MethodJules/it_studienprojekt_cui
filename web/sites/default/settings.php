@@ -756,13 +756,16 @@ $settings['entity_update_backup'] = TRUE;
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
 $databases['default']['default'] = array (
-  'database' => 'it-studienprojek',
-  'username' => 'it-studienprojek',
-  'password' => 'mahphe4ooPhi',
+  'database' => 'it_stud_cui_d8',
+  'username' => 'root',
+  'password' => 'it_stud_cui_d8',
   'prefix' => '',
-  'host' => '10.0.3.105',
+  'host' => 'it_stud_cui_d8_db',
   'port' => '3306',
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
   'driver' => 'mysql',
 );
 $settings['config_sync_directory'] = '../config/sync';
+
+$settings['rebuild_access'] = TRUE;
+

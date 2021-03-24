@@ -52,7 +52,7 @@ class CasProtectedUserFieldConstraintValidator extends ProtectedUserFieldConstra
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorage('user'),
+      $container->get('entity_type.manager')->getStorage('user'),
       $container->get('current_user'),
       $container->get('cas.user_manager'),
       $container->get('config.factory')

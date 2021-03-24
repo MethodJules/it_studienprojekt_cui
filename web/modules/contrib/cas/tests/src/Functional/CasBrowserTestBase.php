@@ -16,6 +16,11 @@ abstract class CasBrowserTestBase extends BrowserTestBase {
   public static $modules = ['cas'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tell mink not to automatically follow redirects.
    */
   protected function disableRedirects() {

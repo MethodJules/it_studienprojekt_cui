@@ -91,73 +91,6 @@ class CasHelperTest extends UnitTestCase {
   }
 
   /**
-   * Test constructing the CAS Server base url.
-   *
-   * @covers ::getServerBaseUrl
-   * @covers ::__construct
-   */
-  public function testGetServerBaseUrl() {
-    /** @var \Drupal\Core\Config\ConfigFactory $config_factory */
-    $config_factory = $this->getConfigFactoryStub([
-      'cas.settings' => [
-        'server.protocol' => 'https',
-        'server.hostname' => 'example.com',
-        'server.port' => 443,
-        'server.path' => '/cas',
-      ],
-    ]);
-    $cas_helper = new CasHelper($config_factory, $this->loggerFactory, $this->token->reveal());
-
-    $this->assertEquals('https://example.com/cas/', $cas_helper->getServerBaseUrl());
-  }
-
-  /**
-   * Test constructing the CAS Server base url with non-standard port.
-   *
-   * Non-standard ports should be included in the constructed URL.
-   *
-   * @covers ::getServerBaseUrl
-   * @covers ::__construct
-   */
-  public function testGetServerBaseUrlNonStandardPort() {
-    /** @var \Drupal\Core\Config\ConfigFactory $config_factory */
-    $config_factory = $this->getConfigFactoryStub([
-      'cas.settings' => [
-        'server.protocol' => 'https',
-        'server.hostname' => 'example.com',
-        'server.port' => 4433,
-        'server.path' => '/cas',
-      ],
-    ]);
-    $cas_helper = new CasHelper($config_factory, $this->loggerFactory, $this->token->reveal());
-
-    $this->assertEquals('https://example.com:4433/cas/', $cas_helper->getServerBaseUrl());
-  }
-
-  /**
-   * Test constructing the CAS Server base url with non-standard protocol.
-   *
-   * Non-standard protocols should be included in the constructed URL.
-   *
-   * @covers ::getServerBaseUrl
-   * @covers ::__construct
-   */
-  public function testGetServerBaseUrlNonStandardHttpProtocol() {
-    /** @var \Drupal\Core\Config\ConfigFactory $config_factory */
-    $config_factory = $this->getConfigFactoryStub([
-      'cas.settings' => [
-        'server.protocol' => 'http',
-        'server.hostname' => 'example.com',
-        'server.port' => 80,
-        'server.path' => '/cas',
-      ],
-    ]);
-    $cas_helper = new CasHelper($config_factory, $this->loggerFactory, $this->token->reveal());
-
-    $this->assertEquals('http://example.com/cas/', $cas_helper->getServerBaseUrl());
-  }
-
-  /**
    * Test the logging capability.
    *
    * @covers ::log
@@ -256,57 +189,6 @@ class CasHelperTest extends UnitTestCase {
     $message = $cas_helper->getMessage('messages.do_not_trust_user_input');
     // Check that the dangerous tags were stripped-out.
     $this->assertEquals('alert("Hacked!");', $message);
-  }
-
-  /**
-   * Tests getCasServerConnectionOptions returns correct data.
-   *
-   * @dataProvider casServerConnectionOptionsDataProvider
-   */
-  public function testCasServerConnectionOptions($ssl_verification) {
-    $configFactory = $this->getConfigFactoryStub([
-      'cas.settings' => [
-        'server.hostname' => 'example.com',
-        'server.port' => 443,
-        'server.path' => '/cas',
-        'server.version' => '1.0',
-        'server.verify' => $ssl_verification,
-        'server.cert' => 'foo',
-        'advanced.connection_timeout' => 30,
-      ],
-    ]);
-    $cas_helper = new CasHelper($configFactory, $this->loggerFactory, $this->token->reveal());
-
-    $options = $cas_helper->getCasServerConnectionOptions();
-
-    $this->assertEquals(30, $options['timeout']);
-
-    switch ($ssl_verification) {
-      case CasHelper::CA_CUSTOM:
-        $this->assertEquals('foo', $options['verify']);
-        break;
-
-      case CasHelper::CA_NONE:
-        $this->assertEquals(FALSE, $options['verify']);
-        break;
-
-      default:
-        $this->assertEquals(TRUE, $options['verify']);
-    }
-  }
-
-  /**
-   * Data provider for casServerConnectionOptionsDataProvider.
-   *
-   * @return array
-   *   The data to provide.
-   */
-  public function casServerConnectionOptionsDataProvider() {
-    return [
-      [CasHelper::CA_NONE],
-      [CasHelper::CA_CUSTOM],
-      [CasHelper::CA_DEFAULT],
-    ];
   }
 
 }

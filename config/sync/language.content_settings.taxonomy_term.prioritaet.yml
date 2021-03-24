@@ -1,0 +1,11 @@
+uuid: 7bfe4056-8822-4fea-8291-db66c5633b2b
+langcode: de
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.prioritaet
+id: taxonomy_term.prioritaet
+target_entity_type_id: taxonomy_term
+target_bundle: prioritaet
+default_langcode: site_default
+language_alterable: false

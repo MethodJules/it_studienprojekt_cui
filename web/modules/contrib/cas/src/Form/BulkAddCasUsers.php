@@ -6,6 +6,9 @@ use Drupal\cas\Exception\CasLoginException;
 use Drupal\cas\Service\CasUserManager;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Markup;
+use Drupal\node\Entity\Node;
+use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 
 /**
@@ -39,6 +42,15 @@ class BulkAddCasUsers extends FormBase {
       '#description' => $this->t('Enter one username per line.'),
     ];
 
+    $form['email_hostname'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Email address'),
+      '#description' => $this->t("The email domain name used to combine with the username to form the user's email address. If your user's email address is usually provided via a CAS attribute, that will not work here because CAS attributes are not available."),
+      '#field_prefix' => $this->t('username@'),
+      '#required' => TRUE,
+      '#default_value' => $this->config('cas.settings')->get('user_accounts.email_hostname'),
+    ];
+
     $roles = array_map(['\Drupal\Component\Utility\Html', 'escape'], user_role_names(TRUE));
     $form['roles'] = [
       '#type' => 'checkboxes',
@@ -53,7 +65,7 @@ class BulkAddCasUsers extends FormBase {
 
     $form['extra_info'] = [
       '#prefix' => '<p>',
-      '#markup' => $this->t("Note that because CAS attributes are only available when a user has logged in, any role or field assignment based on attributes will not be available using this form."),
+      '#markup' => $this->t("Note that because CAS attributes are only available when a user authenticates with CAS, any role or field assignment based on attributes will not be available."),
       '#suffix' => '</p>',
     ];
 
@@ -77,13 +89,15 @@ class BulkAddCasUsers extends FormBase {
     $cas_usernames = trim($form_state->getValue('cas_usernames'));
     $cas_usernames = preg_split('/[\n\r|\r|\n]+/', $cas_usernames);
 
+    $email_hostname = trim($form_state->getValue('email_hostname'));
+
     $operations = [];
     foreach ($cas_usernames as $cas_username) {
       $cas_username = trim($cas_username);
       if (!empty($cas_username)) {
         $operations[] = [
           '\Drupal\cas\Form\BulkAddCasUsers::userAdd',
-          [$cas_username, $roles],
+          [$cas_username, $roles, $email_hostname],
         ];
       }
     }
@@ -109,8 +123,10 @@ class BulkAddCasUsers extends FormBase {
    *   An array of roles to assign to the user.
    * @param array $context
    *   The batch context array, passed by reference.
+   * @param string $email_hostname
+   *   The hostname to combine with the username to create the email address.
    */
-  public static function userAdd($cas_username, array $roles, array &$context) {
+  public static function userAdd($cas_username, array $roles, $email_hostname, array &$context) {
     $cas_user_manager = \Drupal::service('cas.user_manager');
 
     // Back out of an account already has this CAS username.
@@ -122,29 +138,19 @@ class BulkAddCasUsers extends FormBase {
 
     $user_properties = [
       'roles' => $roles,
+      'mail' => $cas_username . '@' . $email_hostname,
     ];
 
-    // If the email assignment strategy is based on username and fixed hostname,
-    // then we can provide an email address for the account. If the email is
-    // filled out based on a CAS attribute, there's nothing we can do to fill
-    // it out because we don't have access to CAS attributes without a login
-    // occuring.
-    $cas_settings = \Drupal::config('cas.settings');
-    $email_assignment_strategy = $cas_settings->get('user_accounts.email_assignment_strategy');
-    if ($email_assignment_strategy === CasUserManager::EMAIL_ASSIGNMENT_STANDARD) {
-      $user_properties['mail'] = $cas_username . '@' . $cas_settings->get('user_accounts.email_hostname');
-    }
-
     try {
-      $cas_user_manager->register($cas_username, $user_properties, $cas_username);
+      /** @var \Drupal\user\UserInterface $user */
+      $user = $cas_user_manager->register($cas_username, $user_properties, $cas_username);
+      $context['results']['messages']['created'][] = $user->toLink()->toString();
     }
     catch (CasLoginException $e) {
       \Drupal::logger('cas')->error('CasLoginException when registering user with name %name: %e', ['%name' => $cas_username, '%e' => $e->getMessage()]);
       $context['results']['messages']['errors'][] = $cas_username;
       return;
     }
-
-    $context['results']['messages']['created'][] = $cas_username;
   }
 
   /**
@@ -170,9 +176,10 @@ class BulkAddCasUsers extends FormBase {
         ));
       }
       if (!empty($results['messages']['created'])) {
+        $userLinks = Markup::create(implode(', ', $results['messages']['created']));
         $messenger->addStatus(t(
           'Successfully created accounts for the following usernames: %usernames',
-          ['%usernames' => implode(', ', $results['messages']['created'])]
+          ['%usernames' => $userLinks]
         ));
       }
     }

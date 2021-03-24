@@ -2,14 +2,12 @@
 
 namespace Drupal\Tests\cas\Functional;
 
-use Drupal\Tests\BrowserTestBase;
-
 /**
  * Tests the login link on the user login form.
  *
  * @group cas
  */
-class CasLoginFormTest extends BrowserTestBase {
+class CasLoginFormTest extends CasBrowserTestBase {
 
   /**
    * {@inheritdoc}

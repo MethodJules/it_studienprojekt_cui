@@ -11,7 +11,7 @@ use Symfony\Component\EventDispatcher\Event;
  * service ticket is being validated.
  *
  * Subscribers of this event can:
- *  - Set a non-stanard validation path on the CAS server. Usually
+ *  - Set a non-standard validation path on the CAS server. Usually
  *    this value is determined automatically based on the CAS protocol version
  *    of the CAS server.
  *  - Add query string parameters to the CAS server validation URL. This is

@@ -95,7 +95,9 @@ class CasRouteEnhancerTest extends UnitTestCase {
     // if CAS logout is enabled AND the currently logged in user logged in
     // via CAS AND we're on the correct path.
     if ($path == '/user/logout' && $cas_logout_enabled && $is_cas_user) {
-      $this->assertArraySubset(['_controller' => '\Drupal\cas\Controller\LogoutController::logout'], $newDefaults);
+      $this->assertArrayHasKey('_controller', $newDefaults, '$newDefaults array does not contain "_controller" key.');
+      $this->assertNotEmpty($newDefaults['_controller']);
+      $this->assertEquals($newDefaults['_controller'], '\Drupal\cas\Controller\LogoutController::logout');
     }
     else {
       $this->assertEquals($originalDefaults, $newDefaults);

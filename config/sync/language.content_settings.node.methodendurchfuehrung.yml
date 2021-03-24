@@ -1,0 +1,11 @@
+uuid: a8957685-9430-4252-be31-3bf3e311b938
+langcode: de
+status: true
+dependencies:
+  config:
+    - node.type.methodendurchfuehrung
+id: node.methodendurchfuehrung
+target_entity_type_id: node
+target_bundle: methodendurchfuehrung
+default_langcode: site_default
+language_alterable: false

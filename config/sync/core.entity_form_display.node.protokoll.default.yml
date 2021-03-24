@@ -1,0 +1,166 @@
+uuid: ce665c8c-30a2-45c7-bb8e-f5b741fbe39a
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.field.node.protokoll.body
+    - field.field.node.protokoll.field_art_des
+    - field.field.node.protokoll.field_endzeit_des_treffens
+    - field.field.node.protokoll.field_methodendurchfuehrung
+    - field.field.node.protokoll.field_ort_des_treffens
+    - field.field.node.protokoll.field_planung
+    - field.field.node.protokoll.field_rueckblick
+    - field.field.node.protokoll.field_startzeit_des_treffens
+    - field.field.node.protokoll.field_teilnehmer_des_treffens
+    - field.field.node.protokoll.field_zusammenfassung_des_treffe
+    - node.type.protokoll
+  module:
+    - datetime
+    - path
+    - text
+id: node.protokoll.default
+targetEntityType: node
+bundle: protokoll
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 121
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+    region: content
+  created:
+    type: datetime_timestamp
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_art_des:
+    weight: 123
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_endzeit_des_treffens:
+    weight: 129
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_methodendurchfuehrung:
+    weight: 127
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_ort_des_treffens:
+    weight: 122
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_planung:
+    weight: 126
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_rueckblick:
+    weight: 125
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_startzeit_des_treffens:
+    weight: 128
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_teilnehmer_des_treffens:
+    weight: 124
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_zusammenfassung_des_treffe:
+    weight: 130
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 15
+    region: content
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 120
+    region: content
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 16
+    region: content
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 5
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+      match_limit: 10
+    region: content
+    third_party_settings: {  }
+hidden: {  }

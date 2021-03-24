@@ -2,15 +2,18 @@
 
 namespace Drupal\Tests\cas\Functional;
 
-use Drupal\Core\Url;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\cas\Traits\CasTestTrait;
 
 /**
  * Tests inserting user interaction into the flow.
  *
  * @group cas
  */
-class CasUserInteractionTest extends BrowserTestBase {
+class CasUserInteractionTest extends CasBrowserTestBase {
+
+  use CasTestTrait {
+    casLogin as traitCasLogin;
+  }
 
   /**
    * {@inheritdoc}
@@ -31,17 +34,11 @@ class CasUserInteractionTest extends BrowserTestBase {
     // Create a local user.
     $account = $this->createUser([], 'beavis');
     // Create a CAS user.
-    \Drupal::service('cas_mock_server.user_manager')->addUser([
-      'username' => 'beavis',
-      'email' => 'beavis@example.com',
-      'password' => 'needtp',
+    $this->createCasUser('beavis', 'beavis@example.com', 'needtp', [
       'firstname' => 'Beavis',
       'lastname' => 'El Gran Cornholio',
-    ]);
-    // Link the two accounts.
-    \Drupal::service('externalauth.externalauth')->linkExistingAccount('beavis', 'cas', $account);
-    // Start the CAS mock server.
-    \Drupal::service('cas_mock_server.server_manager')->start();
+    ], $account);
+
     // Place the login/logout block so that we can check if user is logged in.
     $this->placeBlock('system_menu_block:account');
   }
@@ -78,14 +75,7 @@ class CasUserInteractionTest extends BrowserTestBase {
    * Logs-in the user to the CAS mock server.
    */
   protected function casLogin() {
-    $query = [
-      'service' => Url::fromRoute('cas.service')->setAbsolute()->toString(),
-    ];
-    $edit = [
-      'email' => 'beavis@example.com',
-      'password' => 'needtp',
-    ];
-    $this->drupalPostForm('/cas-mock-server/login', $edit, 'Log in', ['query' => $query]);
+    $this->traitCasLogin('beavis@example.com', 'needtp');
   }
 
   /**

@@ -14,7 +14,9 @@ use Drupal\cas\CasPropertyBag;
  * before the user is actually authenticated to Drupal.
  *
  * Subscribe to this event to:
- *  - Prevent the user from logging in by setting $allowLogin to FALSE.
+ *  - Prevent the user from logging in by calling ::cancelLogin(). Additionally,
+ *    a reason could be set when calling this method. If the reason was set,
+ *    this message will be shown as error message to the user.
  *  - Change properties on the Drupal user account (like adding or removing
  *    roles). The CAS module saves the user entity after dispatching the
  *    event, so subscribers do not need to save it themselves.
@@ -43,6 +45,13 @@ class CasPreLoginEvent extends Event {
    * @var bool
    */
   protected $allowLogin = TRUE;
+
+  /**
+   * The user message why logging-in has been canceled.
+   *
+   * @var \Drupal\Component\Render\MarkupInterface|string|null
+   */
+  protected $cancelLoginReason;
 
   /**
    * Constructor.
@@ -78,17 +87,48 @@ class CasPreLoginEvent extends Event {
   }
 
   /**
+   * Allows the login operation.
+   *
+   * @return $this
+   */
+  public function allowLogin() {
+    $this->allowLogin = TRUE;
+    $this->cancelLoginReason = NULL;
+    return $this;
+  }
+
+  /**
+   * Cancels the login operation.
+   *
+   * @param \Drupal\Component\Render\MarkupInterface|string|null $reason
+   *   (optional) A user message explaining why the login has been canceled. If
+   *   passed, this value will be used to show a message to the user that tries
+   *   to login. If omitted, a standard message will be displayed.
+   *
+   * @return $this
+   */
+  public function cancelLogin($reason = NULL) {
+    $this->allowLogin = FALSE;
+    $this->cancelLoginReason = $reason;
+    return $this;
+  }
+
+  /**
    * Set the $allowLogin property.
    *
    * @param bool $allow_login
    *   TRUE to allow login, FALSE otherwise.
+   *
+   * @deprecated in cas:8.x-1.7 and is removed from cas:8.x-2.0. Use
+   *   ::allowLogin() or ::cancelLogin() instead.
    */
   public function setAllowLogin($allow_login) {
+    @trigger_error('Using ' . __METHOD__ . '() is deprecated in cas:8.x-1.7 and is removed from cas:8.x-2.0. Use ::allowLogin() or ::cancelLogin() instead.', E_USER_DEPRECATED);
     if ($allow_login) {
-      $this->allowLogin = TRUE;
+      $this->allowLogin();
     }
     else {
-      $this->allowLogin = FALSE;
+      $this->cancelLogin();
     }
   }
 
@@ -100,6 +140,16 @@ class CasPreLoginEvent extends Event {
    */
   public function getAllowLogin() {
     return $this->allowLogin;
+  }
+
+  /**
+   * Returns a user message explaining why the login process is asked to cancel.
+   *
+   * @return \Drupal\Component\Render\MarkupInterface|string|null
+   *   The reason why the login process is asked to cancel, if any has been set.
+   */
+  public function getCancelLoginReason() {
+    return $this->cancelLoginReason;
   }
 
 }

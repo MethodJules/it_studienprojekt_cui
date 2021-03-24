@@ -23,8 +23,8 @@ class CasPropertyBagTest extends UnitTestCase {
   public function testConstruct() {
     $name = $this->randomMachineName(8);
     $bag = new CasPropertyBag($name);
-    $this->assertEquals($name, $this->readAttribute($bag, 'username'));
-    $this->assertEquals($name, $this->readAttribute($bag, 'originalUsername'));
+    $this->assertEquals($name, $bag->getUsername());
+    $this->assertEquals($name, $bag->getOriginalUsername());
   }
 
   /**
@@ -37,8 +37,8 @@ class CasPropertyBagTest extends UnitTestCase {
     $bag = new CasPropertyBag($name);
     $new_name = $this->randomMachineName(8);
     $bag->setUsername($new_name);
-    $this->assertEquals($new_name, $this->readAttribute($bag, 'username'));
-    $this->assertEquals($name, $this->readAttribute($bag, 'originalUsername'));
+    $this->assertEquals($new_name, $bag->getUsername());
+    $this->assertEquals($name, $bag->getOriginalUsername());
   }
 
   /**
@@ -50,7 +50,7 @@ class CasPropertyBagTest extends UnitTestCase {
     $bag = new CasPropertyBag($this->randomMachineName(8));
     $pgt = $this->randomMachineName(24);
     $bag->setPgt($pgt);
-    $this->assertEquals($pgt, $this->readAttribute($bag, 'pgt'));
+    $this->assertEquals($pgt, $bag->getPgt());
   }
 
   /**
@@ -65,7 +65,7 @@ class CasPropertyBagTest extends UnitTestCase {
       'baz' => ['quux, foobar'],
     ];
     $bag->setAttributes($attributes);
-    $this->assertEquals($attributes, $this->readAttribute($bag, 'attributes'));
+    $this->assertEquals($attributes, $bag->getAttributes());
   }
 
   /**
@@ -117,5 +117,4 @@ class CasPropertyBagTest extends UnitTestCase {
     $property->setValue($bag, $attributes);
     $this->assertEquals($attributes, $bag->getAttributes());
   }
-
 }

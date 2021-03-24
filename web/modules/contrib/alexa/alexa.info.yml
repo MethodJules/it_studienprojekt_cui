@@ -1,0 +1,14 @@
+name: Alexa
+type: module
+description: Provides an endpoint to receive Amazon Echo callbacks from Alexa Skills.
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: Alexa
+configure: alexa.admin_settings
+test_dependencies:
+  - chatbot_api:chatbot_api (>=2.0-rc0)
+
+# Information added by Drupal.org packaging script on 2020-09-14
+version: '8.x-1.0-rc2'
+project: 'alexa'
+datestamp: 1600089792

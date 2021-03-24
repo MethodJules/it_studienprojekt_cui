@@ -4,6 +4,7 @@ namespace Drupal\Tests\cas\Unit\Service;
 
 use Drupal\cas\CasRedirectData;
 use Drupal\cas\Event\CasPreRedirectEvent;
+use Drupal\cas\Service\CasHelper;
 use Drupal\cas\Service\CasRedirector;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Tests\UnitTestCase;
@@ -42,6 +43,13 @@ class CasRedirectorTest extends UnitTestCase {
   protected $eventDispatcher;
 
   /**
+   * The mocked config factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface|\PHPUnit\Framework\MockObject\MockBuilder
+   */
+  protected $configFactory;
+
+  /**
    * Storage for events during tests.
    *
    * @var array
@@ -54,14 +62,23 @@ class CasRedirectorTest extends UnitTestCase {
   public function setUp() {
     parent::setUp();
 
+    $this->configFactory = $this->getConfigFactoryStub([
+      'cas.settings' => [
+        'server.hostname' => 'example-server.com',
+        'server.protocol' => 'https',
+        'server.port' => 443,
+        'server.path' => '/cas',
+        'server.version' => '2.0',
+        'server.verify' => CasHelper::CA_DEFAULT,
+        'server.cert' => 'foo',
+        'advanced.connection_timeout' => 30,
+      ],
+    ]);
+
     $this->casHelper = $this
       ->getMockBuilder('\Drupal\cas\Service\CasHelper')
       ->disableOriginalConstructor()
       ->getMock();
-
-    $this->casHelper
-      ->method('getServerBaseUrl')
-      ->willReturn('https://example-server.com/cas/');
 
     $this->urlGenerator = $this->createMock('\Drupal\Core\Routing\UrlGeneratorInterface');
     $this->urlGenerator->method('generate')
@@ -123,7 +140,7 @@ class CasRedirectorTest extends UnitTestCase {
    * Test buildRedirectResponse.
    */
   public function testBuildRedirectResponse() {
-    $cas_redirector = new CasRedirector($this->casHelper, $this->eventDispatcher, $this->urlGenerator);
+    $cas_redirector = new CasRedirector($this->casHelper, $this->eventDispatcher, $this->urlGenerator, $this->configFactory);
     $cas_data = new CasRedirectData();
     $cas_data->forceRedirection();
 
@@ -180,7 +197,7 @@ class CasRedirectorTest extends UnitTestCase {
     $this->events = [];
 
     // Fire the redirection event.
-    $cas_redirector = new CasRedirector($this->casHelper, $this->eventDispatcher, $this->urlGenerator);
+    $cas_redirector = new CasRedirector($this->casHelper, $this->eventDispatcher, $this->urlGenerator, $this->configFactory);
     $cas_data = new CasRedirectData();
     $response = $cas_redirector->buildRedirectResponse($cas_data);
 

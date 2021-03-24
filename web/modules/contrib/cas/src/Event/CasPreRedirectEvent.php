@@ -3,6 +3,7 @@
 namespace Drupal\cas\Event;
 
 use Drupal\cas\CasRedirectData;
+use Drupal\cas\CasServerConfig;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -35,13 +36,23 @@ class CasPreRedirectEvent extends Event {
   protected $casRedirectData;
 
   /**
+   * Data object representing the CAS server configuration to redirect to.
+   *
+   * @var \Drupal\cas\CasServerConfig
+   */
+  protected $casServerConfig;
+
+  /**
    * CasPreRedirectEvent constructor.
    *
    * @param \Drupal\cas\CasRedirectData $cas_redirect_data
    *   The redirect data object.
+   * @param \Drupal\cas\CasServerConfig $cas_server_config
+   *   The CAS server config data object.
    */
-  public function __construct(CasRedirectData $cas_redirect_data) {
+  public function __construct(CasRedirectData $cas_redirect_data, CasServerConfig $cas_server_config) {
     $this->casRedirectData = $cas_redirect_data;
+    $this->casServerConfig = $cas_server_config;
   }
 
   /**
@@ -52,6 +63,16 @@ class CasPreRedirectEvent extends Event {
    */
   public function getCasRedirectData() {
     return $this->casRedirectData;
+  }
+
+  /**
+   * Get the CAS server config for the server to redirect to.
+   *
+   * @return \Drupal\cas\CasServerConfig
+   *   The config, which can be modified.
+   */
+  public function getCasServerConfig() {
+    return $this->casServerConfig;
   }
 
 }

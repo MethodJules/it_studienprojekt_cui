@@ -1,0 +1,28 @@
+uuid: 848e2d59-ddcb-4666-976f-549ecf10fa3f
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_aufgabe
+    - node.type.aufgabe
+    - node.type.methodendurchfuehrung
+id: node.methodendurchfuehrung.field_aufgabe
+field_name: field_aufgabe
+entity_type: node
+bundle: methodendurchfuehrung
+label: Aufgabe
+description: 'Bitte geben Sie hier die in der Sitzung festgelegten und zu erledigenden Aufgaben an.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      aufgabe: aufgabe
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -4,12 +4,15 @@ status: true
 dependencies:
   config:
     - field.field.node.aufgabe.body
+    - field.field.node.aufgabe.field_deadline
+    - field.field.node.aufgabe.field_prioritaet
     - field.field.node.aufgabe.field_status
     - field.field.node.aufgabe.field_storypoint
     - field.field.node.aufgabe.field_verantwortlicher
     - field.field.node.aufgabe.field_zugewiesene_personen
     - node.type.aufgabe
   module:
+    - datetime
     - text
     - user
 id: node.aufgabe.default
@@ -23,6 +26,23 @@ content:
     weight: 101
     settings: {  }
     third_party_settings: {  }
+    region: content
+  field_deadline:
+    weight: 106
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_prioritaet:
+    weight: 107
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
     region: content
   field_status:
     weight: 103

@@ -3,6 +3,7 @@
 namespace Drupal\cas\Controller;
 
 use Drupal\cas\CasRedirectResponse;
+use Drupal\cas\CasServerConfig;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -102,7 +103,9 @@ class LogoutController implements ContainerInjectionInterface {
    *   The fully constructed server logout URL.
    */
   public function getServerLogoutUrl(Request $request) {
-    $base_url = $this->casHelper->getServerBaseUrl() . 'logout';
+    // TODO: Allow cas server config to be altered.
+    $casServerConfig = CasServerConfig::createFromModuleConfig($this->settings);
+    $base_url = $casServerConfig->getServerBaseUrl() . 'logout';
 
     // CAS servers can redirect a user to some other URL after they end
     // the user session. Check if we're configured to send along this
@@ -123,7 +126,7 @@ class LogoutController implements ContainerInjectionInterface {
       }
 
       // CAS 2.0 uses 'url' param, while newer versions use 'service'.
-      if ($this->settings->get('server.version') == '2.0') {
+      if ($casServerConfig->getProtocolVerison() == '2.0') {
         $params['url'] = $return_url;
       }
       else {

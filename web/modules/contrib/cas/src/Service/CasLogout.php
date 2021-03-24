@@ -101,12 +101,10 @@ class CasLogout {
    * @codeCoverageIgnore
    */
   protected function destroySession($sid) {
-    session_start();
     session_id($sid);
-    session_unset();
+    session_start();
     session_destroy();
     session_write_close();
-    session_regenerate_id(TRUE);
   }
 
   /**

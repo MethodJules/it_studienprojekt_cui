@@ -4,12 +4,15 @@ status: true
 dependencies:
   config:
     - field.field.node.aufgabe.body
+    - field.field.node.aufgabe.field_deadline
+    - field.field.node.aufgabe.field_prioritaet
     - field.field.node.aufgabe.field_status
     - field.field.node.aufgabe.field_storypoint
     - field.field.node.aufgabe.field_verantwortlicher
     - field.field.node.aufgabe.field_zugewiesene_personen
     - node.type.aufgabe
   module:
+    - datetime
     - path
     - text
 id: node.aufgabe.default
@@ -33,6 +36,22 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_deadline:
+    weight: 126
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_prioritaet:
+    weight: 127
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_status:
     weight: 123
     settings:

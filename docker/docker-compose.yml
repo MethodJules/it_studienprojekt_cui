@@ -9,7 +9,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ../database:/var/lib/mysql
+      - ../database:/var/lib/mysql:delegated
     restart: always
     #network_mode: host
   it_stud_cui_d8_drupal:
@@ -19,7 +19,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ..:/app
+      - ..:/app:delegated
     #network_mode: host
     restart: always
   #corenlp:

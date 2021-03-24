@@ -8,7 +8,7 @@ namespace Drupal\cas\Exception;
 class CasLoginException extends \Exception {
 
   /**
-   * Auto registraton turned off, and local account does not exist.
+   * Auto registration turned off, and local account does not exist.
    */
   const NO_LOCAL_ACCOUNT = 1;
 
@@ -36,5 +36,37 @@ class CasLoginException extends \Exception {
    * Auto registration attempted to register Drupal user that already exists.
    */
   const USERNAME_ALREADY_EXISTS = 6;
+
+  /**
+   * A user message when login failed on a subscriber cancellation.
+   *
+   * @var \Drupal\Component\Render\MarkupInterface|string;
+   */
+  protected $subscriberCancelReason;
+
+  /**
+   * Sets a user message when login failed on a subscriber cancellation.
+   *
+   * @param \Drupal\Component\Render\MarkupInterface|string $reason
+   *   A user message to be set along with the exception.
+   *
+   * @return $this
+   */
+  public function setSubscriberCancelReason($reason) {
+    if ($this->getCode() === self::SUBSCRIBER_DENIED_LOGIN) {
+      $this->subscriberCancelReason = $reason;
+    }
+    return $this;
+  }
+
+  /**
+   * Returns the user message if login failed on a subscriber cancellation.
+   *
+   * @return \Drupal\Component\Render\MarkupInterface|string|null
+   *   The reason why login failed, if any.
+   */
+  public function getSubscriberCancelReason() {
+    return $this->subscriberCancelReason;
+  }
 
 }

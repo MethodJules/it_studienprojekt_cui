@@ -2,6 +2,7 @@
 
 namespace Drupal\cas\Service;
 
+use Drupal\cas\CasServerConfig;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -84,7 +85,9 @@ class CasProxyHelper {
    *   The fully formatted URL.
    */
   private function getServerProxyUrl($target_service) {
-    $url = $this->casHelper->getServerBaseUrl() . 'proxy';
+    // TODO: Consider allowing the config to be altered.
+    $casServerConfig = CasServerConfig::createFromModuleConfig($this->settings);
+    $url = $casServerConfig->getServerBaseUrl() . 'proxy';
     $params = [];
     $params['pgt'] = $this->session->get('cas_pgt');
     $params['targetService'] = $target_service;
@@ -113,7 +116,10 @@ class CasProxyHelper {
     $cas_url = $this->getServerProxyUrl($target_service);
     try {
       $this->casHelper->log(LogLevel::DEBUG, "Retrieving proxy ticket from %cas_url", ['%cas_url' => $cas_url]);
-      $response = $this->httpClient->get($cas_url, $this->casHelper->getCasServerConnectionOptions());
+      // TODO: Consider allowing the config to be altered.
+      $casServerConfig = CasServerConfig::createFromModuleConfig($this->settings);
+      $casServerConnectionOptions = $casServerConfig->getCasServerGuzzleConnectionOptions();
+      $response = $this->httpClient->get($cas_url, $casServerConnectionOptions);
     }
     catch (ClientException $e) {
       throw new CasProxyException($e->getMessage());

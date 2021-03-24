@@ -3,6 +3,7 @@
 namespace Drupal\Tests\cas\Functional;
 
 use Drupal\cas\CasPropertyBag;
+use Drupal\Tests\cas\Traits\CasTestTrait;
 
 /**
  * Class CasEventsTest.
@@ -11,12 +12,12 @@ use Drupal\cas\CasPropertyBag;
  */
 class CasEventsTest extends CasBrowserTestBase {
 
+  use CasTestTrait;
+
   /**
-   * The modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['cas', 'cas_test'];
+  public static $modules = ['block', 'cas', 'cas_mock_server', 'cas_test'];
 
   /**
    * Tests we can use the CasPreRegisterEvent to alter user properties.
@@ -45,6 +46,30 @@ class CasEventsTest extends CasBrowserTestBase {
 
     // Check that the external name has been registered correctly.
     $this->assertSame('foo', $authmap->get($account->id(), 'cas'));
+  }
+
+  /**
+   * Tests cancelling the login process from a subscriber.
+   */
+  public function testLoginCancelling() {
+    // Create a local user.
+    $account = $this->createUser([], 'Antoine Batiste');
+    // And a linked CAS user.
+    $this->createCasUser('Antoine Batiste', 'antoine@example.com', 'baTistE', [], $account);
+    // Place the login/logout block so that we can check if user is logged in.
+    $this->placeBlock('system_menu_block:account');
+
+    // Check the case when the subscriber didn't set a reason message.
+    \Drupal::state()->set('cas_test.flag', 'cancel without message');
+    $this->casLogin('antoine@example.com', 'baTistE');
+    $this->assertSession()->pageTextContains('You do not have access to log in to this website. Please contact a site administrator if you believe you should have access.');
+    $this->assertSession()->linkExists('Log in');
+
+    // Check the case when the subscriber has set a reason message.
+    \Drupal::state()->set('cas_test.flag', 'cancel with message');
+    $this->casLogin('antoine@example.com', 'baTistE');
+    $this->assertSession()->pageTextContains('Cancelled with a custom message.');
+    $this->assertSession()->linkExists('Log in');
   }
 
 }

@@ -1,0 +1,21 @@
+uuid: f1bf2018-6877-4561-aad4-800b69782e6d
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_planung
+    - node.type.protokoll
+  module:
+    - text
+id: node.protokoll.field_planung
+field_name: field_planung
+entity_type: node
+bundle: protokoll
+label: Planung
+description: 'Was planen Sie für dieses Treffen? Was sollte am Ende der Sitzung erreicht sein?'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

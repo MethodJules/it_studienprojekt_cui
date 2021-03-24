@@ -4,9 +4,11 @@ namespace Drupal\cas\Service;
 
 use Drupal\cas\CasRedirectData;
 use Drupal\cas\CasRedirectResponse;
+use Drupal\cas\CasServerConfig;
 use Drupal\cas\Event\CasPreRedirectEvent;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Psr\Log\LogLevel;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -39,6 +41,13 @@ class CasRedirector {
   protected $urlGenerator;
 
   /**
+   * Stores CAS settings.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $settings;
+
+  /**
    * CasRedirector constructor.
    *
    * @param \Drupal\cas\Service\CasHelper $cas_helper
@@ -47,11 +56,14 @@ class CasRedirector {
    *   The EventDispatcher service.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The URL generator service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The configuration factory.
    */
-  public function __construct(CasHelper $cas_helper, EventDispatcherInterface $event_dispatcher, UrlGeneratorInterface $url_generator) {
+  public function __construct(CasHelper $cas_helper, EventDispatcherInterface $event_dispatcher, UrlGeneratorInterface $url_generator, ConfigFactoryInterface $config_factory) {
     $this->casHelper = $cas_helper;
     $this->eventDispatcher = $event_dispatcher;
     $this->urlGenerator = $url_generator;
+    $this->settings = $config_factory->get('cas.settings');
   }
 
   /**
@@ -70,19 +82,22 @@ class CasRedirector {
   public function buildRedirectResponse(CasRedirectData $data, $force = FALSE) {
     $response = NULL;
 
-    // Generate login url.
-    $login_url = $this->casHelper->getServerBaseUrl() . 'login';
+    $casServerConfig = CasServerConfig::createFromModuleConfig($this->settings);
 
-    // Dispatch an event that allows modules to alter or prevent the redirect.
-    $pre_redirect_event = new CasPreRedirectEvent($data);
+    // Dispatch an event that allows modules to alter or prevent the redirect,
+    // or to change the CAS server that we're redirected to.
+    $pre_redirect_event = new CasPreRedirectEvent($data, $casServerConfig);
     $this->eventDispatcher->dispatch(CasHelper::EVENT_PRE_REDIRECT, $pre_redirect_event);
 
-    // Determine the service URL.
+    // Build the service URL, which is where the CAS server will send users
+    // back to after authenticating them. We always send users back to our main
+    // service controller, but there can be additional query params to attach
+    // to that request as well.
     $service_parameters = $data->getAllServiceParameters();
     $parameters = $data->getAllParameters();
     $parameters['service'] = $this->urlGenerator->generate('cas.service', $service_parameters, UrlGeneratorInterface::ABSOLUTE_URL);
 
-    $login_url .= '?' . UrlHelper::buildQuery($parameters);
+    $login_url = $casServerConfig->getServerBaseUrl() . 'login?' . UrlHelper::buildQuery($parameters);
 
     // Get the redirection response.
     if ($force || $data->willRedirect()) {

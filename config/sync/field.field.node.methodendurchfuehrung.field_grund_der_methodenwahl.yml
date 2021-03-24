@@ -1,0 +1,21 @@
+uuid: ac09aedb-c002-49be-9a6f-911e83ecde8b
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_grund_der_methodenwahl
+    - node.type.methodendurchfuehrung
+  module:
+    - text
+id: node.methodendurchfuehrung.field_grund_der_methodenwahl
+field_name: field_grund_der_methodenwahl
+entity_type: node
+bundle: methodendurchfuehrung
+label: 'Grund der Methodenwahl'
+description: 'Bitte erläutern Sie, warum Sie sich für diese Methode entschieden haben.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

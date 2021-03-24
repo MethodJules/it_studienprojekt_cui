@@ -1,0 +1,23 @@
+uuid: 1d10ce67-339e-41d0-9a63-ba1bcda7333c
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.protokoll
+  module:
+    - text
+id: node.protokoll.body
+field_name: body
+entity_type: node
+bundle: protokoll
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+field_type: text_with_summary

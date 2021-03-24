@@ -3,7 +3,6 @@
 namespace Drupal\Tests\cas\Functional;
 
 use Drupal\cas\CasPropertyBag;
-use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
 
 /**
@@ -11,12 +10,7 @@ use Drupal\user\Entity\Role;
  *
  * @group cas
  */
-class CasAutoAssignedRolesTest extends BrowserTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static $modules = ['cas'];
+class CasAutoAssignedRolesTest extends CasBrowserTestBase {
 
   /**
    * Tests Standard installation profile.

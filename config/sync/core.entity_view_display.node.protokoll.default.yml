@@ -1,0 +1,110 @@
+uuid: fee3effc-aa57-45b5-b681-91ac4b623166
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.field.node.protokoll.body
+    - field.field.node.protokoll.field_art_des
+    - field.field.node.protokoll.field_endzeit_des_treffens
+    - field.field.node.protokoll.field_methodendurchfuehrung
+    - field.field.node.protokoll.field_ort_des_treffens
+    - field.field.node.protokoll.field_planung
+    - field.field.node.protokoll.field_rueckblick
+    - field.field.node.protokoll.field_startzeit_des_treffens
+    - field.field.node.protokoll.field_teilnehmer_des_treffens
+    - field.field.node.protokoll.field_zusammenfassung_des_treffe
+    - node.type.protokoll
+  module:
+    - datetime
+    - text
+    - user
+id: node.protokoll.default
+targetEntityType: node
+bundle: protokoll
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_art_des:
+    weight: 103
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_endzeit_des_treffens:
+    weight: 109
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_methodendurchfuehrung:
+    weight: 107
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_ort_des_treffens:
+    weight: 102
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_planung:
+    weight: 106
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_rueckblick:
+    weight: 105
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_startzeit_des_treffens:
+    weight: 108
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_teilnehmer_des_treffens:
+    weight: 104
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_zusammenfassung_des_treffe:
+    weight: 110
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  langcode: true

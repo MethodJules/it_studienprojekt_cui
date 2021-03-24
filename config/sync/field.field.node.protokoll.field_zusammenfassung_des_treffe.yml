@@ -1,0 +1,21 @@
+uuid: 6311b5fb-625a-4e34-aaf4-1fa876bc511e
+langcode: de
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_zusammenfassung_des_treffe
+    - node.type.protokoll
+  module:
+    - text
+id: node.protokoll.field_zusammenfassung_des_treffe
+field_name: field_zusammenfassung_des_treffe
+entity_type: node
+bundle: protokoll
+label: 'Zusammenfassung des Treffens'
+description: 'Bitte geben Sie hier eine kurze Zusammenfassung ihres Treffens. Gab es Probleme die auftraten? Was ist das Fazit ihres Treffens? Haben Sie erreicht was Sie erreichen wollten? usw.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

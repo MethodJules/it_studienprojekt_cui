@@ -156,7 +156,7 @@ class CasUserManagerTest extends UnitTestCase {
       ])
       ->getMock();
 
-    $this->assertNotEmpty($cas_user_manager->register('test'), 'Successfully registered user.');
+    $this->assertNotEmpty($cas_user_manager->register('test', [], 'test'), 'Successfully registered user.');
   }
 
   /**
@@ -199,7 +199,7 @@ class CasUserManagerTest extends UnitTestCase {
       ->expects($this->never())
       ->method('userLoginFinalize');
 
-    $this->setExpectedException('Drupal\cas\Exception\CasLoginException', 'Cannot login, local Drupal user account does not exist.');
+    $this->expectException('Drupal\cas\Exception\CasLoginException', 'Cannot login, local Drupal user account does not exist.');
 
     $cas_user_manager->login(new CasPropertyBag('test'), 'ticket');
   }
@@ -252,7 +252,7 @@ class CasUserManagerTest extends UnitTestCase {
       ->expects($this->never())
       ->method('userLoginFinalize');
 
-    $this->setExpectedException('Drupal\cas\Exception\CasLoginException', 'Cannot register user, an event listener denied access.');
+    $this->expectException('Drupal\cas\Exception\CasLoginException', 'Cannot register user, an event listener denied access.');
 
     $cas_user_manager->login(new CasPropertyBag('test'), 'ticket');
   }
@@ -374,7 +374,7 @@ class CasUserManagerTest extends UnitTestCase {
       ->method('dispatch')
       ->willReturnCallback(function ($event_type, $event) {
         if ($event instanceof CasPreLoginEvent) {
-          $event->setAllowLogin(FALSE);
+          $event->cancelLogin();
         }
       });
 
@@ -386,7 +386,7 @@ class CasUserManagerTest extends UnitTestCase {
       ->expects($this->never())
       ->method('userLoginFinalize');
 
-    $this->setExpectedException('Drupal\cas\Exception\CasLoginException', 'Cannot login, an event listener denied access.');
+    $this->expectException('Drupal\cas\Exception\CasLoginException', 'Cannot login, an event listener denied access.');
 
     $cas_user_manager->login(new CasPropertyBag('test'), 'ticket');
   }
@@ -477,7 +477,7 @@ class CasUserManagerTest extends UnitTestCase {
       ->expects($this->never())
       ->method('userLoginFinalize');
 
-    $this->setExpectedException('Drupal\cas\Exception\CasLoginException', 'The username user has not been activated or is blocked.');
+    $this->expectException('Drupal\cas\Exception\CasLoginException', 'The username user has not been activated or is blocked.');
 
     $this->session
       ->method('set')

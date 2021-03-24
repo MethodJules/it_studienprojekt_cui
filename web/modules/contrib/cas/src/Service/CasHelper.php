@@ -93,6 +93,11 @@ class CasHelper {
   const EVENT_PRE_REDIRECT = 'cas.pre_redirect';
 
   /**
+   * Event to modify CAS server config before it's used to validate a ticket.
+   */
+  const EVENT_PRE_VALIDATE_SERVER_CONFIG = 'cas.pre_validate_server_config';
+
+  /**
    * Event type identifier for pre validation events.
    *
    * @var string
@@ -146,28 +151,6 @@ class CasHelper {
     $this->settings = $config_factory->get('cas.settings');
     $this->loggerChannel = $logger_factory->get('cas');
     $this->token = $token;
-  }
-
-  /**
-   * Construct the base URL to the CAS server.
-   *
-   * @return string
-   *   The base URL.
-   */
-  public function getServerBaseUrl() {
-    $protocol = $this->settings->get('server.protocol');
-    $url = $protocol . '://' . $this->settings->get('server.hostname');
-
-    // Only append port if it's non standard.
-    $port = $this->settings->get('server.port');
-    if (($protocol == 'http' && $port != 80) || ($protocol == 'https' && $port != 443)) {
-      $url .= ':' . $this->settings->get('server.port');
-    }
-
-    $url .= $this->settings->get('server.path');
-    $url = rtrim($url, '/') . '/';
-
-    return $url;
   }
 
   /**
@@ -247,35 +230,6 @@ class CasHelper {
     }
 
     return new FormattableMarkup(Xss::filter($this->token->replace($message)), []);
-  }
-
-  /**
-   * Gets config data for guzzle communications with the CAS server.
-   *
-   * @return array
-   *   The guzzle connection options.
-   */
-  public function getCasServerConnectionOptions() {
-    $options = [];
-    $verify = $this->settings->get('server.verify');
-    switch ($verify) {
-      case CasHelper::CA_CUSTOM:
-        $cert = $this->settings->get('server.cert');
-        $options['verify'] = $cert;
-        break;
-
-      case CasHelper::CA_NONE:
-        $options['verify'] = FALSE;
-        break;
-
-      case CasHelper::CA_DEFAULT:
-      default:
-        $options['verify'] = TRUE;
-    }
-
-    $options['timeout'] = $this->settings->get('advanced.connection_timeout');
-
-    return $options;
   }
 
 }

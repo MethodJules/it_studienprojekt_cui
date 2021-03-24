@@ -2,19 +2,12 @@
 
 namespace Drupal\Tests\cas\Functional;
 
-use Drupal\Tests\BrowserTestBase;
-
 /**
  * Tests the user's ability to reset their password.
  *
  * @group cas
  */
-class CasPasswordResetTest extends BrowserTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['cas'];
+class CasPasswordResetTest extends CasBrowserTestBase {
 
   /**
    * The CAS settings.

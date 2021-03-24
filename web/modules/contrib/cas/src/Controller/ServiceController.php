@@ -281,7 +281,7 @@ class ServiceController implements ContainerInjectionInterface {
       }
     }
     catch (CasLoginException $e) {
-      // Use an appropiate log level depending on exception type.
+      // Use an appropriate log level depending on exception type.
       if (empty($e->getCode()) || $e->getCode() === CasLoginException::ATTRIBUTE_PARSING_ERROR) {
         $error_level = LogLevel::ERROR;
       }
@@ -356,6 +356,12 @@ class ServiceController implements ContainerInjectionInterface {
         break;
 
       case CasLoginException::SUBSCRIBER_DENIED_LOGIN:
+        // If a subscriber has denied the login by setting a custom message, use
+        // that message and exit here.
+        $message = $e->getSubscriberCancelReason();
+        if ($message) {
+          return $message;
+        }
         $msgKey = 'message_subscriber_denied_login';
         break;
 
