@@ -43,6 +43,11 @@ class DesignThinkingIntent extends IntentPluginBase {
 
       }
 
+      if (strpos(strtolower($output), strtolower('')) !== false) {
+
+        $ouptut = "Ich habe dich leider nicht verstanden kannst du bitte deine Frage wiederholen?";
+      
+      }
       
       $this->response->setIntentResponse($output);
       
@@ -160,13 +165,7 @@ class DesignThinkingIntent extends IntentPluginBase {
 
       } else if (strpos(strtolower($info), 'phase') !== false) {
 
-        $output = 'Zahlreiche internationale Unternehmen und Organisationen jeglicher Größe nutzen
-        Design Thinking als Projekt-, Innovations-, Portfolio-, Analyse- und/oder
-        Entwicklungsmethode. Insbesondere die SAP SE nutzt Design Thinking dabei als Ansatz,
-        wie die Entwicklungseinheiten mit den Kunden und deren Endnutzern
-        zusammenarbeiten. Weitere Unternehmen, die Design Thinking anwenden, sind u. a.
-        Swisscom, Deutsche Bank, Volkswagen, Deutsche Bahn, Siemens, Airbnb und Pinterest.
-        Es existieren diverse Vorgehensmodelle für das Design Thinking. Ein allgemeines
+        $output = 'Es existieren diverse Vorgehensmodelle für das Design Thinking. Ein allgemeines
         Vorgehensmodell, welches an der Stanford University gelehrt wird teilt den Prozess in
         fünf Schritten auf, welche als Empathie, Definition, Ideenfindung, Prototyp und Testen
         definiert werden können. In der Empathie-Phase werden wird ein Problem, ein Produkt oder bestimmte Aspekte
@@ -287,6 +286,33 @@ class DesignThinkingIntent extends IntentPluginBase {
         zusammenarbeiten. Weitere Unternehmen, die Design Thinking anwenden, sind u. a.
         Swisscom, Deutsche Bank, Volkswagen, Deutsche Bahn, Siemens, Airbnb und Pinterest.';
         
+      } else if (strpos(strtolower($info), 'modell') !== false) {
+
+        $output = 'Ich kenne die Design Thinking Modelle der Stanford University und das Design Thinking Modell hildehseimer Art.
+        Im Modell der Stanford University wird der Prozess in die fünf Schritten Empathie, Definition, Ideenfindung, Prototyp 
+        und Testen aufgeteilt werden. Das hildesheimer Modell baut auf den Grunprinzipien Team, Raum und Prozess auf. ';
+        
+      } else if ((strpos(strtolower($info), 'prozess') !== false) || (strpos(strtolower($info), 'funktioniert') !== false) ) {
+
+        $output = 'Design Thinking stellt ein systematisches und iteratives Vorgehen zur Lösung von Problemen und der 
+        Entwicklung neuer Ideen oder Innovationen dar. Es ist ein kreativer Prozess der durch unterschiedliche Methoden zweckmäßig 
+        unterstützt wird. Iterativ bedeutet dabei wieder kehrend oder wiederholend. Der Begriff Iteration wird allgemein für einen 
+        Prozess des mehrfachen Wiederholens gleicher oder ähnlicher Handlungen zur Annäherung an eine Lösung verwendet.
+        Ziel des Design Thinking Prozesses ist es Lösungen zu finden, die aus Nutzersicht relevant und überzeugend sind. 
+        Der Ansatz des Design Thinking hat allgemeine Verbreitung gefunden und kann in unterschiedlichen Proje kten angewendet werden, 
+        um Lösungsansätze zu finden. Dies können zum Beispiel innovative Geschäftsmodelle für Sach - und Dienstleistungen, optimierte 
+        Geschäftsprozesse oder neuartige Softwaresysteme sein';
+
+      } else if (strpos(strtolower($info), 'benötigt') !== false) {
+
+        $output = 'Durch die Einteilung in Phasen ist der Design Thinking Ansatz zudem be sser plan - und steuerbar.
+        Jeder Phase dienen unterschiedliche Kreativitätsmethoden, um die jeweiligen Ziele zu erreichen. Je nach Anwendungsbereich kommt beim Design Thinking
+         eine Vielzahl von Methoden zum Einsatz, die sich meist durch Benutzerorientierung , Visualisierung, Simulation sowie durch iteratives oder durch forschendes
+          Vorgehen auszeichnen. Zu wichtigen Methoden des Design Thinking, die vor allem im Marketing eingesetzt werden, zählen unter anderen das Customer Journey Mapping
+           oder die Erstellung von Persona';
+
+      }else {
+        $output = 'Ich habe dich leider nicht verstanden. Kannst du bitte noch einmal nachfragen. ';
       }
 
 

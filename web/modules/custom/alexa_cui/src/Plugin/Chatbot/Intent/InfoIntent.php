@@ -47,12 +47,14 @@ class InfoIntent extends IntentPluginBase {
         array_push($alleMethoden, $title);      
 
       }
-        /* 
+        
       $test = 'Ich kenne die folgenden Methoden: ';
 
       foreach ($alleMethoden as $element) {
         $test .= ' ' . $element;
-      }*/
+      }
+
+
 
       //ForEach Schleife zum durchlaufen aller existenten Methoden
       // Variable um zu prüfen, ob mehr als 1 Methode abgefragt wurde
@@ -60,31 +62,68 @@ class InfoIntent extends IntentPluginBase {
       
       if (!empty($slot_alle)) {
 
-        $output = $this->getAllInfos($slot_name);
+        $output = $this->getAllInfos($slot_name, $alleMethoden);
 
       } else if (!empty($slot_dauer)) {
 
-        $output = $this->getDauer($slot_name, $slot_dauer);
+        $output = $this->getDauer($slot_name, $slot_dauer, $alleMethoden);
 
       } else if (!empty($slot_hilfsmittel)) {
 
-        $output = $this->getHilfsmittel($slot_name, $slot_hilfsmittel);
+        $output = $this->getHilfsmittel($slot_name, $slot_hilfsmittel, $alleMethoden);
 
       } else if (!empty($slot_zsm)) {
 
-        $output = $this->getZusammenfassung($slot_name);
+        $output = $this->getZusammenfassung($slot_name, $alleMethoden);
         
       } else {
 
-        $output = $this->getMethodInfo($slot_name, $slot_info);
+        $output = $this->getMethodInfo($slot_name, $slot_info, $alleMethoden);
 
+      } 
+
+      if ($output == '') {
+        $ouptut = 'Ich habe dich leider nicht verstanden. Kannst du deine Frage bitte erneut stellen?';
       }
-      
+
       $this->response->setIntentResponse($output);
       
     }
 
-    public function getZusammenfassung ($name) {
+    public function getZusammenfassung ($name, $alleMethoden) {
+
+      foreach ($alleMethoden as $element) {
+        
+        $elementFil = str_replace(array( '(', ')', ',', '/'), '', $element);
+        $elementFilter = str_replace(array('-', '   ' ), ' ', $elementFil);
+       
+
+        if (strpos(strtolower($elementFilter), strtolower($name)) !== false) {
+
+          $name =  $element;
+        
+        }
+
+        if (strpos(strtolower($name), strtolower('sechs w. methode empathize')) !== false) {
+
+          $name = '6 W-Methode (Empathize)';
+
+        }
+
+        
+
+        if (strpos(strtolower($name), strtolower('fünf warum-technik define')) !== false) {
+
+          $name = '5-Warum-Technik (Define)';
+
+        }
+
+        $test .= ' ' . $element;
+
+
+      }
+
+
 
       $output = ''; 
       $query = \Drupal::entityQuery('node');
@@ -102,13 +141,57 @@ class InfoIntent extends IntentPluginBase {
       }
 
       $outputGefiltert = str_replace(array('<p>', '&nbsp;', '</p>'), ' ', $output);
+
+      /*
+      if ($output == '') {
+
+        $ouptut = 'Ich habe dich leider nicht verstanden. Kannst du deine Frage bitte erneut stellen?';
+        $outputGefiltert = 'Ich habe dich leider nicht verstanden. Kannst du deine Frage bitte erneut stellen?';
+      
+      }
+
+      */
+
       return $outputGefiltert; 
 
     }
 
 
-    public function getDauer ($name, $dauer) {
-      $output = 'Wir sind in Dauer drinne';
+    public function getDauer ($name, $dauer, $alleMethoden) {
+      $output = ' ';
+
+      foreach ($alleMethoden as $element) {
+
+        $elementFil = str_replace(array( '(', ')', ',', '/'), '', $element);
+        $elementFilter = str_replace(array('-', '   ' ), ' ', $elementFil);
+       
+
+        if (strpos(strtolower($elementFilter), strtolower($name)) !== false) {
+
+          $name =  $element;
+        
+        }
+
+        if (strpos(strtolower($name), strtolower('sechs w. methode empathize')) !== false) {
+
+          $name = '6 W-Methode (Empathize)';
+
+        }
+
+        
+
+        if (strpos(strtolower($name), strtolower('fünf warum-technik define')) !== false) {
+
+          $name = '5-Warum-Technik (Define)';
+
+        }
+
+        $test .= ' ' . $element;
+
+
+      }
+
+
       $test = 'draußen';
       $query = \Drupal::entityQuery('node');
       $query
@@ -150,22 +233,23 @@ class InfoIntent extends IntentPluginBase {
         Abfrage wird mit den Rahmenzeiten verglichen und es wird eine Antwort gewählt
         */ 
         if ($sInMinInt >= $zahlen[0][0] && $sInMinInt <= $zahlen[0][1]) {
-          $output = $dauer . ' reichen um die Methode ' . $name . ' durchzuführen.';
+          $output = 'Die vorgeschlagene Zeit genügt, um die Methode ' . $name . ' durchzuführen.';
         } else if ($sInMinInt < $zahlen[0][0]) {
-          $output = $dauer . ' ist zu wenig Zeit um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  'Minuten und maximal' . $zahlen[0][1] . 'Minuten benötigt.';
+          $output = ' Die vorgeschlagene Zeit genügt nicht um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
         } else if ($sInMinInt > $zahlen[0][1]) {
-          $output = $dauer . ' sollten nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  'Minuten bis' . $zahlen[0][1] . 'Minuten verwendet werden.';
+          $output = 'Die vorgeschlagene Zeit sollte nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
           } else {
           $output = 'Fragen Sie bitte erneut nach';
 
         }
 
         
-      } else if (strpos(strtolower($dauer), "min") !== false) {
+      } else if (strpos(strtolower($dauer), "min") !== false || is_numeric($dauer)) {
         
         /*
         Zeiteinheit wird herausgefiltert
         */ 
+        $test .= "In Minuten Bereich";
 
         $dauerZahl = str_replace(array('min'), '', $dauer);
 
@@ -174,11 +258,12 @@ class InfoIntent extends IntentPluginBase {
         Abfrage wird mit den Rahmenzeiten verglichen und es wird eine Antwort gewählt
         */ 
         if ($dauerInt >= $zahlen[0][0] && $dauerInt <= $zahlen[0][1]) {
-          $output = $dauer . ' reichen um die Methode ' . $name . ' durchzuführen.';
+          $output = 'Die vorgeschlagene Zeit genügt, um die Methode ' . $name . ' durchzuführen.';
         } else if ($dauerInt < $zahlen[0][0]) {
-          $output = $dauer . ' ist zu wenig Zeit um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  'Minuten und maximal' . $zahlen[0][1] . 'Minuten benötigt.';
+
+          $output = ' Die vorgeschlagene Zeit genügt nicht, um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
         } else if ($dauerInt > $zahlen[0][1]) {
-          $output = $dauer . ' sollten nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  'Minuten bis' . $zahlen[0][1] . 'Minuten verwendet werden.';
+          $output = ' Die vorgeschlagene Zeit sollte nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
           } else {
           $output = 'Fragen Sie bitte erneut nach';
 
@@ -204,11 +289,11 @@ class InfoIntent extends IntentPluginBase {
         Abfrage wird mit den Rahmenzeiten verglichen und es wird eine Antwort gewählt
         */ 
         if ($hInMInt >= $zahlen[0][0] && $hInMInt <= $zahlen[0][1]) {
-          $output = $dauer . ' reichen um die Methode ' . $name . ' durchzuführen.';
+          $output = 'Die vorgeschlagene Zeit genügt, um die Methode ' . $name . ' durchzuführen.';
         } else if ($hInMInt < $zahlen[0][0]) {
-          $output = $dauer . ' ist zu wenig Zeit um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  'Minuten und maximal' . $zahlen[0][1] . 'Minuten benötigt.';
+          $output = 'Die vorgeschlagene Zeit genügt nicht, um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
         } else if ($hInMInt > $zahlen[0][1]) {
-          $output = $dauer . ' sollten nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  'Minuten bis' . $zahlen[0][1] . 'Minuten verwendet werden.';
+          $output = 'Die vorgeschlagene Zeit sollte nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
           } else {
           $output = 'Fragen Sie bitte erneut nach';
 
@@ -231,11 +316,11 @@ class InfoIntent extends IntentPluginBase {
         Abfrage wird mit den Rahmenzeiten verglichen und es wird eine Antwort gewählt
         */ 
         if ($TinMinInt >= $zahlen[0][0] && $TinMinInt <= $zahlen[0][1]) {
-          $output = $dauer . ' reichen um die Methode ' . $name . ' durchzuführen.';
+          $output = ' Die vorgeschlagene Zeit genügt, um die Methode ' . $name . ' durchzuführen.';
         } else if ($TinMinInt < $zahlen[0][0]) {
-          $output = $dauer . ' ist zu wenig Zeit um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  'Minuten und maximal' . $zahlen[0][1] . 'Minuten benötigt.';
+          $output = ' Die vorgeschlagene Zeit genügt nicht, um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
         } else if ($TinMinInt > $zahlen[0][1]) {
-          $output = $dauer . ' sollten nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  'Minuten bis' . $zahlen[0][1] . 'Minuten verwendet werden.';
+          $output = ' Die vorgeschlagene Zeit sollte nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
           } else {
           $output = 'Fragen Sie bitte erneut nach';
 
@@ -256,24 +341,83 @@ class InfoIntent extends IntentPluginBase {
         Abfrage wird mit den Rahmenzeiten verglichen und es wird eine Antwort gewählt
         */ 
         if ($wInMinInt >= $zahlen[0][0] && $wInMinInt <= $zahlen[0][1]) {
-          $output = $dauer . ' reichen um die Methode ' . $name . ' durchzuführen.';
+          $output = 'Die vorgeschlagene Zeit genügt, um um die Methode ' . $name . ' durchzuführen.';
         } else if ($wInMinInt < $zahlen[0][0]) {
-          $output = $dauer . ' ist zu wenig Zeit um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  'Minuten und maximal' . $zahlen[0][1] . 'Minuten benötigt.';
+          $output = 'Die vorgeschlagene Zeit genügt nicht, um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
         } else if ($wInMinInt > $zahlen[0][1]) {
-          $output = $dauer . ' sollten nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  'Minuten bis' . $zahlen[0][1] . 'Minuten verwendet werden.';
+          $output = ' Die vorgeschlagene Zeit sollte nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
           } else {
           $output = 'Fragen Sie bitte erneut nach';
 
         }
       }
 
+      //$output = "neu";
+      $dauerInt = $dauer + 0;
+      /*
+     Abfrage wird mit den Rahmenzeiten verglichen und es wird eine Antwort gewählt
+     */ 
+     if ($dauerInt >= $zahlen[0][0] && $dauerInt <= $zahlen[0][1]) {
+
+       $output = 'Die vorgeschlagene Zeit genügt, um die Methode ' . $name . ' durchzuführen.';
+    
+      } else if ($dauerInt < $zahlen[0][0]) {
+
+       $output = ' Die vorgeschlagene Zeit genügt nicht, um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
+     
+      } else if ($dauerInt > $zahlen[0][1]) {
+       
+        $output = ' Die vorgeschlagene Zeit sollte nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
       
+      } else {
+      
+        $output = 'Fragen Sie bitte erneut nach';
+
+     }
+
+
+
+
+      $test .= " min: " . $zahlen[0][0] . " max: " . $zahlen[0][1] . " dauer: " . $dauer . " output: " . $output;
 
       return $output;
     }
 
-    public function getHilfsmittel ($name, $hilfsmittel) {
+    public function getHilfsmittel ($name, $hilfsmittel, $alleMethoden) {
       $output = '';
+
+      foreach ($alleMethoden as $element) {
+
+        $elementFil = str_replace(array( '(', ')', ',', '/'), '', $element);
+        $elementFilter = str_replace(array('-', '   ' ), ' ', $elementFil);
+       
+
+        if (strpos(strtolower($elementFilter), strtolower($name)) !== false) {
+
+          $name =  $element;
+        
+        }
+
+        if (strpos(strtolower($name), strtolower('sechs w. methode empathize')) !== false) {
+
+          $name = '6 W-Methode (Empathize)';
+
+        }
+
+        
+
+        if (strpos(strtolower($name), strtolower('fünf warum-technik define')) !== false) {
+
+          $name = '5-Warum-Technik (Define)';
+
+        }
+
+        $test .= ' ' . $element;
+
+
+      }
+
+
       /*
       Variablen um zu erkennen wie viele Hilfsmittel benötigt werden, also mehr als das angefragte
       */
@@ -305,7 +449,7 @@ class InfoIntent extends IntentPluginBase {
       */
       foreach ($bekannteHilfsmittel as $mittel) {
         
-        if(strpos(strtolower($textGefiltert), strtolower($mittel)) !== false) {
+        if(strpos(strtolower($text), strtolower($mittel)) !== false) {
           
           if (strpos(strtolower($mittel), strtolower($hilfsmittel)) !== false) {
             /*
@@ -344,8 +488,39 @@ class InfoIntent extends IntentPluginBase {
 
 
     //gibt alle Informationen zu einer Methode aus in der Reihenfolge wie sie auf der Webseite ist
-    public function getAllInfos ($name) {
+    public function getAllInfos ($name, $alleMethoden) {
       
+      foreach ($alleMethoden as $element) {
+
+        $elementFil = str_replace(array( '(', ')', ',', '/'), '', $element);
+        $elementFilter = str_replace(array('-', '   ' ), ' ', $elementFil);
+       
+
+        if (strpos(strtolower($elementFilter), strtolower($name)) !== false) {
+
+          $name =  $element;
+        
+        }
+
+        if (strpos(strtolower($name), strtolower('sechs w. methode empathize')) !== false) {
+
+          $name = '6 W-Methode (Empathize)';
+
+        }
+
+        
+
+        if (strpos(strtolower($name), strtolower('fünf warum-technik define')) !== false) {
+
+          $name = '5-Warum-Technik (Define)';
+
+        }
+
+        $test .= ' ' . $element;
+
+
+      }
+
       $output = '';
       
 
@@ -406,12 +581,50 @@ class InfoIntent extends IntentPluginBase {
 
       //filtert die HTML Elemente 
       $outputGefiltert = str_replace(array('<p>', '&nbsp;', '</p>'), ' ', $output);
+
+      if ( $output = '') {
+        $outputGefiltert = 'Ich habe leider keine Antwort für deine Frage gefunden. Kannst du bitte erneut nachfragen oder eine andere Frage stellen?';
+      }
+
+
       return $outputGefiltert;
     }
 
     
     //gibt die vom Nutzer angefragen Informatinoskategorien zu einer Methode wieder
-    public function getMethodInfo ($name, $info) {
+    public function getMethodInfo ($name, $info, $alleMethoden) {
+
+
+      foreach ($alleMethoden as $element) {
+
+        $elementFil = str_replace(array( '(', ')', ',', '/'), '', $element);
+        $elementFilter = str_replace(array('-', '   ' ), ' ', $elementFil);
+        $test .= ' ' . $elementFilter;
+
+        if (strpos(strtolower($elementFilter), strtolower($name)) !== false) {
+
+          $name =  $element;
+          
+        }
+
+        if (strpos(strtolower($name), strtolower('sechs w. methode empathize')) !== false) {
+
+          $name = '6 W-Methode (Empathize)';
+
+        }
+
+        
+
+        if (strpos(strtolower($name), strtolower('5 warum-technik define')) !== false) {
+
+          $name = '5-Warum-Technik (Define)';
+
+        }
+
+        
+
+
+      }
 
       $output = '';
       $infoKategorien = array('ziele', 'beteiligte', 'hilfsmittel', 'vorteile', 'nachteile', 'beispiel', 'vorgehen', 'phase', 'raum');
@@ -438,7 +651,7 @@ class InfoIntent extends IntentPluginBase {
             foreach ($entity_ids as $nid) {
               $node = Node::load($nid);
               $title = $node->getTitle();
-              $output .= ' ' . $infoKategorien[$i] . ' von ' . $title . ': ';
+              $output .= 'Die ' . $infoKategorien[$i] . ' von ' . $title . ': ';
               $output .= strip_tags($node->get('field_'. $infoKategorien[$i])->value, '<p></p>');
               
             }
@@ -474,6 +687,11 @@ class InfoIntent extends IntentPluginBase {
         }
       
       $outputGefiltert = str_replace(array('<p>', '&nbsp;', '</p>'), ' ', $output);
+
+      if ( $output = '') {
+        $outputGefiltert = 'Ich habe leider keine Antwort für deine Frage gefunden. Kannst du bitte erneut nachfragen oder eine andere Frage stellen?';
+      }
+      
       return $outputGefiltert;
     }
     

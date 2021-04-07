@@ -39,6 +39,12 @@ class InitialIntent extends IntentPluginBase {
       }
 
       
+      if (strpos(strtolower($output), strtolower('')) !== false) {
+
+        $ouptut = "Ich habe dich leider nicht verstanden kannst du bitte deine Frage wiederholen?";
+      
+      }
+      
       $this->response->setIntentResponse($output);
       
     }
