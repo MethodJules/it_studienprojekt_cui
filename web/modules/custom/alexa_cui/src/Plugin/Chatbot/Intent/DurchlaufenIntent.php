@@ -15,20 +15,22 @@ use Drupal\node\Entity\Node;
  * )
  * 
  */
+
+ 
 class DurchlaufenIntent extends IntentPluginBase {
 
-
+ 
     public function process() {
     //Drupal::logger("alexa_cui")->notice("testausgabe 21:39");
       // Testausgabe
     //$this->response->setIntentResponse('daniel Anbindung funktioniert');
       
       $slot_name = $this->request->getIntentSlot('Methodenname');
-
+      $slot_name = $this->_getCleanMethodename($slot_name);
 
       $slot_vorgehen = $this->request->getIntentSlot('Moderieren');
       $slot_timer = $this->request->getIntentSlot('Timer');
-     
+     // \Drupal::logger("alexa_cui")->notice($slot_name);
     //sammelt alle vorhandenen Methodentitel in einem Array
 
 
@@ -50,7 +52,7 @@ class DurchlaufenIntent extends IntentPluginBase {
      
       
       $body = strip_tags($node->get('body')->value, '<p></p>');
-      if ( $zahlen[0][0] <= 10 ){ // anpassen für 60 minuten
+      if ( $zahlen[0][0] <= 100 ){ // anpassen für 60 minuten
        // $title = 'Die Methode ' . $title . ' wird beschreiben als: ' . strip_tags($node->get('body')->value, '<p></p>');
        
        
@@ -134,7 +136,7 @@ class DurchlaufenIntent extends IntentPluginBase {
         $title = $node->getTitle();
        
         
-        $body = strip_tags($node->get('body')->value, '<p></p>');
+        $body = strip_tags($node->get('body')->value, ' ');
         $output = "Die Methode: ".$title." wird folgendermaßen beschrieben ".$body;
        
       }
@@ -156,11 +158,11 @@ class DurchlaufenIntent extends IntentPluginBase {
       foreach ($entity_ids as $nid) {
         $node = Node::load($nid);
        
-        $title = $node->getTitle();
+        $title = $node->title->value;
        
         
-        $vorgehen  = strip_tags($node->get('field_vorgehen')->value, '<p></p>');
-        $output = "Die Methode: ".$title." wird folgendermaßen vorgegangen ".$vorgehen. " wenn ich einrn Timer setzen soll sage: Timmer setzte von der Methode ".$Methodenname;
+        $vorgehen  = strip_tags($node->get('field_vorgehen')->value, ' ');
+        $output = "Die Methode: ".$title." wird folgendermaßen vorgegangen ".$vorgehen;
        
       }
 
@@ -199,6 +201,20 @@ class DurchlaufenIntent extends IntentPluginBase {
 
 
   }       
+
+  public function _getCleanMethodename($name) {  
+          $nids = \Drupal::entityQuery('node')->condition('type','methode')->execute();
+          $nodes =  \Drupal\node\Entity\Node::loadMultiple($nids);   
+          foreach($nodes as $node) {
+            $method = explode('(', $node->title->value);         
+            $phase = rtrim($method[1], ")");         
+            $methods[strtolower(rtrim($method[0]))] = $node->title->value; 
+          }      
+
+          return $methods[$name]; 
+            
+            
+  }
 
 }
 
