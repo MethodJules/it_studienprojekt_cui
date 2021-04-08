@@ -28,7 +28,9 @@ class DesignThinkingIntent extends IntentPluginBase {
       $slot_dt = $this->request->getIntentSlot('DT');
       $slot_zsm = $this->request->getIntentSlot('Zsm');
       $slot_alle = $this->request->getIntentSlot('KompletteInformationen');
-        
+
+
+      //Je nachdem welche Slots ausgelesen werden, wird eine andere Methode aufgerufen  
       if (!empty($slot_dt)) {
 
         $output = $this->getInfo($slot_dt);
@@ -43,6 +45,7 @@ class DesignThinkingIntent extends IntentPluginBase {
 
       }
 
+      //Falls keine Informationen zu der Anfrage gefunden wurde wird dieser Output angegeben
       if (strpos(strtolower($output), strtolower('')) !== false) {
 
         $ouptut = "Ich habe dich leider nicht verstanden kannst du bitte deine Frage wiederholen?";
@@ -53,6 +56,7 @@ class DesignThinkingIntent extends IntentPluginBase {
       
     }
 
+    // gibt eine Zusammenfassung von Design Thinking wieder
     public function getZusammenfassung () {
 
       $output = 'Design Thinking stellt ein systematisches und iteratives Vorgehen zur Lösung von
@@ -83,6 +87,7 @@ class DesignThinkingIntent extends IntentPluginBase {
 
     }
 
+    //Gibt alle vorhandenen Inforamtionen zu Design Thinking wieder
     public function getAllInfos() {
       
       $output = 'Design Thinking stellt ein systematisches und iteratives Vorgehen zur Lösung von
@@ -148,12 +153,15 @@ class DesignThinkingIntent extends IntentPluginBase {
       return $output;
     }
 
+
+    // gibt spezifische Informationen wieder
     public function getInfo($info) {
       
       /*
       Die einzelnen Abschnitte sind im Code hinterlegt, weil sie noch nicht in der Datenbank existiert haben
       */ 
 
+      //Je nachdem welche Informationen von dem Nutzer abgefragt wurde und gibt diese wieder
       if (strpos(strtolower($info), 'ziel') !== false) {
 
         $output = 'Ziel des Design Thinking Prozesses ist es Lösungen zu finden, die aus Nutzersicht
@@ -197,7 +205,7 @@ class DesignThinkingIntent extends IntentPluginBase {
 
       } else if ((strpos(strtolower($info), 'raum') !== false) or (strpos(strtolower($info), 'räume') !== false)) {
 
-        $output = 'Ein grundlegendes Design Thinking Vorgehensmodell ist das Hildesheimeier Modell. 
+        $output = 'Ein grundlegendes Design Thinking Vorgehensmodell ist das Hildesheimer Modell. 
         In diesem werden sechs Design Thinking Phasen auf drei Räume aufgeteilt, welche als
         Problemraum, Lösungsraum und Implementierungsraum definiert werden. Jeder Raum
         enthält zwei Phasen, welche sich durch ihre individuellen Tätigkeiten und anwendbaren

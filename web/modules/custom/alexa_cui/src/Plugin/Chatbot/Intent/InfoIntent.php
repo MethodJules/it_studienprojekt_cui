@@ -25,10 +25,13 @@ class InfoIntent extends IntentPluginBase {
       $this->response->setIntentResponse('PlugIn Anbindung funktioniert');
      */
 
+     //Auslesen der Slots
       $slot_name = $this->request->getIntentSlot('Methodenname');
+      $slot_name = $this->_getCleanMethodename($slot_name);
       $slot_info = $this->request->getIntentSlot('Methodeninfo');
       $slot_alle = $this->request->getIntentSlot('KompletteInformationen');
       $slot_dauer = $this->request->getIntentSlot('Dauer');
+      $slot_Menge = $this->request->getIntentSlot('Quantity');
       $slot_zsm = $this->request->getIntentSlot('Zsm');
       $slot_hilfsmittel = $this->request->getIntentSlot('Hilfsmittel');
       
@@ -38,6 +41,8 @@ class InfoIntent extends IntentPluginBase {
       ->condition('type', 'Methode');
       $entity_ids = $query->execute();
       
+      /*Test auslese aller bekannten Methoden
+
       $alleMethoden = array();
       
       foreach ($entity_ids as $nid) {
@@ -53,20 +58,18 @@ class InfoIntent extends IntentPluginBase {
       foreach ($alleMethoden as $element) {
         $test .= ' ' . $element;
       }
+      */
 
 
 
-      //ForEach Schleife zum durchlaufen aller existenten Methoden
-      // Variable um zu prüfen, ob mehr als 1 Methode abgefragt wurde
-
-      
+      //Je nachdem welche Slots ausgelesen werden, wird eine andere Methode aufgerufen  
       if (!empty($slot_alle)) {
 
         $output = $this->getAllInfos($slot_name, $alleMethoden);
 
-      } else if (!empty($slot_dauer)) {
+      } else if ((!empty($slot_Menge)) && (!empty($slot_dauer))) {
 
-        $output = $this->getDauer($slot_name, $slot_dauer, $alleMethoden);
+        $output = $this->getDauer($slot_name, $slot_dauer, $slot_Menge);
 
       } else if (!empty($slot_hilfsmittel)) {
 
@@ -86,43 +89,33 @@ class InfoIntent extends IntentPluginBase {
         $ouptut = 'Ich habe dich leider nicht verstanden. Kannst du deine Frage bitte erneut stellen?';
       }
 
-      $this->response->setIntentResponse($output);
+      $this->response->setIntentResponse($ouptut);
       
     }
 
-    public function getZusammenfassung ($name, $alleMethoden) {
+    // gibt den Methodennamen ohne eingeklamemrte Objekte wieder
+    public function _getCleanMethodename($name) {
+      $nids = \Drupal::entityQuery('node')->condition('type','methode')->execute();
+      $nodes =  \Drupal\node\Entity\Node::loadMultiple($nids);
 
-      foreach ($alleMethoden as $element) {
-        
-        $elementFil = str_replace(array( '(', ')', ',', '/'), '', $element);
-        $elementFilter = str_replace(array('-', '   ' ), ' ', $elementFil);
-       
-
-        if (strpos(strtolower($elementFilter), strtolower($name)) !== false) {
-
-          $name =  $element;
-        
-        }
-
-        if (strpos(strtolower($name), strtolower('sechs w. methode empathize')) !== false) {
-
-          $name = '6 W-Methode (Empathize)';
-
-        }
-
-        
-
-        if (strpos(strtolower($name), strtolower('fünf warum-technik define')) !== false) {
-
-          $name = '5-Warum-Technik (Define)';
-
-        }
-
-        $test .= ' ' . $element;
-
-
+      foreach($nodes as $node) {
+          //preg_match('#\((.*?)\)#', $node->title->value, $match);
+          //$match[1];
+          $method = explode('(', $node->title->value);
+          $phase = rtrim($method[1], ")");
+          $methods[ strtolower(rtrim($method[0]))] = $node->title->value; 
       }
 
+      //dsm($name);
+      //dsm($methods);
+      //dsm($methods[$name]);
+
+      return $methods[$name];
+  }
+
+
+  // Fass die Methode zusammen
+    public function getZusammenfassung ($name) {
 
 
       $output = ''; 
@@ -136,63 +129,37 @@ class InfoIntent extends IntentPluginBase {
       foreach ($entity_ids as $nid) {
         $node = Node::load($nid);
         $title = $node->getTitle();
-        $output = 'Die Methode ' . $title . ' wird beschreiben als: ' . strip_tags($node->get('body')->value, '<p></p>');
+         
+        // Entferne letzten Teil des Titels
+        //$split_node_title = explode("(", $title);
+        //Output
+       // array_push($array,trim($split_node_title[0]));
+
+        $output = 'Die Methode ' . $title . ' wird beschrieben als: ' . strip_tags($node->get('body')->value, '<p></p>');
 
       }
 
       $outputGefiltert = str_replace(array('<p>', '&nbsp;', '</p>'), ' ', $output);
 
-      /*
-      if ($output == '') {
+      
+      if ($output == ' ') {
 
         $ouptut = 'Ich habe dich leider nicht verstanden. Kannst du deine Frage bitte erneut stellen?';
         $outputGefiltert = 'Ich habe dich leider nicht verstanden. Kannst du deine Frage bitte erneut stellen?';
       
       }
 
-      */
+      
 
-      return $outputGefiltert; 
+      return $output; 
 
     }
 
 
-    public function getDauer ($name, $dauer, $alleMethoden) {
+    // prüft, ob die Dauer in der angefragten Zeit durchgeführt werden kann
+    public function getDauer ($name, $dauer, $menge) {
       $output = ' ';
 
-      foreach ($alleMethoden as $element) {
-
-        $elementFil = str_replace(array( '(', ')', ',', '/'), '', $element);
-        $elementFilter = str_replace(array('-', '   ' ), ' ', $elementFil);
-       
-
-        if (strpos(strtolower($elementFilter), strtolower($name)) !== false) {
-
-          $name =  $element;
-        
-        }
-
-        if (strpos(strtolower($name), strtolower('sechs w. methode empathize')) !== false) {
-
-          $name = '6 W-Methode (Empathize)';
-
-        }
-
-        
-
-        if (strpos(strtolower($name), strtolower('fünf warum-technik define')) !== false) {
-
-          $name = '5-Warum-Technik (Define)';
-
-        }
-
-        $test .= ' ' . $element;
-
-
-      }
-
-
-      $test = 'draußen';
       $query = \Drupal::entityQuery('node');
       $query
       ->condition('type', 'Methode')
@@ -205,38 +172,33 @@ class InfoIntent extends IntentPluginBase {
         $node = Node::load($nid);
         $title = $node->getTitle();
         $text = strip_tags($node->get('field_benoetigte_zeit')->value, '<p></p>');
+        // Entferne letzten Teil des Titels
+        $split_node_title = explode("(", $title);
+        //Output
+        array_push($array,trim($split_node_title[0]));
 
       }
 
       preg_match_all('!\d+!', $text, $zahlen);
-
+      
       /*
       Je anchdem ob der NUtzer die ANgabe in Stunden, Minuten oder sekunden macht
       in u. a. Sekunde sind zusätzliche parameter in der IF Bediungung, weil Zahlen die Buchstaben enthalten können
       und dadurch ohne die Parameter Probleme aufgetreten sind
       */
-      if ((strpos(strtolower($dauer), "s") !== false) && (strpos(strtolower($dauer), "min") === false) && (strpos(strtolower($dauer), "tage") === false) 
-      && (strpos(strtolower($dauer), "tag") === false) && (strpos(strtolower($dauer), "woche") === false) && (strpos(strtolower($dauer), "wochen") === false)
-      && (strpos(strtolower($dauer), "stunde") === false) && (strpos(strtolower($dauer), "stunden") === false)) {
-         /*
-         Sekunden werden in Minuten umgerechnet und die Zeiteinheit wird herausgefiltert
-         */
-        $dauerZahl = str_replace(array('s'), '', $dauer);
-        $sInMin = 1;
-        
-        if ($dauerZahl > 0) {
-          $sInMin = floor ($dauerZahl / 60);
-        }
+      if ((strpos(strtolower($dauer), "minute") !== false) or (strpos(strtolower($dauer), "minuten") !== false)) {
 
-        $sInMinInt = $sInMin + 0;
+
+        $test = "Minute eingeben";
+
         /*
         Abfrage wird mit den Rahmenzeiten verglichen und es wird eine Antwort gewählt
         */ 
-        if ($sInMinInt >= $zahlen[0][0] && $sInMinInt <= $zahlen[0][1]) {
+        if ($menge >= $zahlen[0][0] && $menge <= $zahlen[0][1]) {
           $output = 'Die vorgeschlagene Zeit genügt, um die Methode ' . $name . ' durchzuführen.';
-        } else if ($sInMinInt < $zahlen[0][0]) {
+        } else if ($menge < $zahlen[0][0]) {
           $output = ' Die vorgeschlagene Zeit genügt nicht um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
-        } else if ($sInMinInt > $zahlen[0][1]) {
+        } else if ($menge > $zahlen[0][1]) {
           $output = 'Die vorgeschlagene Zeit sollte nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
           } else {
           $output = 'Fragen Sie bitte erneut nach';
@@ -244,25 +206,21 @@ class InfoIntent extends IntentPluginBase {
         }
 
         
-      } else if (strpos(strtolower($dauer), "min") !== false || is_numeric($dauer)) {
-        
-        /*
-        Zeiteinheit wird herausgefiltert
-        */ 
-        $test .= "In Minuten Bereich";
+      } else if ((strpos(strtolower($dauer), "stunde") !== false) or (strpos(strtolower($dauer), "stunden") !== false)) {
 
-        $dauerZahl = str_replace(array('min'), '', $dauer);
+        $test .= "stunde eingegeben";
 
-        $dauerInt = $dauerZahl + 0;
+        $HinMin = $menge * 60;
          /*
         Abfrage wird mit den Rahmenzeiten verglichen und es wird eine Antwort gewählt
         */ 
-        if ($dauerInt >= $zahlen[0][0] && $dauerInt <= $zahlen[0][1]) {
+        
+        if ($HinMin >= $zahlen[0][0] && $HinMin <= $zahlen[0][1]) {
           $output = 'Die vorgeschlagene Zeit genügt, um die Methode ' . $name . ' durchzuführen.';
-        } else if ($dauerInt < $zahlen[0][0]) {
+        } else if ($HinMin < $zahlen[0][0]) {
 
           $output = ' Die vorgeschlagene Zeit genügt nicht, um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
-        } else if ($dauerInt > $zahlen[0][1]) {
+        } else if ($HinMin > $zahlen[0][1]) {
           $output = ' Die vorgeschlagene Zeit sollte nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
           } else {
           $output = 'Fragen Sie bitte erneut nach';
@@ -270,112 +228,76 @@ class InfoIntent extends IntentPluginBase {
         }
         
         
-      } else if (((strpos(strtolower($dauer), "h") !== false) && (strpos(strtolower($dauer), "min") === false) && (strpos(strtolower($dauer), "woche") === false) 
-      && (strpos(strtolower($dauer), "wochen") === false)) or ((strpos(strtolower($dauer), "stunde") !== false) && (strpos(strtolower($dauer), "min") === false) 
-      && (strpos(strtolower($dauer), "woche") === false) && (strpos(strtolower($dauer), "wochen") === false))) {
+      } else if ((strpos(strtolower($dauer), "tag") !== false) or (strpos(strtolower($dauer), "tage") !== false)) {
         
+        $test .= "tag eingegeben";
+
         /*
-        Stunden in Minuten umgerechnet und die Zeiteinheit wird herausgefiltert
+       Ein Tag ist ein Arbeitstag und wird in Min umgerechnet
         */ 
-        $dauerZahl = str_replace(array('h'), '', $dauer);
-        $hInM = 60;
+        $tInM = $menge * 60 * 8;;
 
-        if ($dauerZahl > 0) {
-          $hInM = 60 * $dauerZahl;
-        }
-
-        $hInMInt = $hInM + 0;
          /*
         Abfrage wird mit den Rahmenzeiten verglichen und es wird eine Antwort gewählt
         */ 
-        if ($hInMInt >= $zahlen[0][0] && $hInMInt <= $zahlen[0][1]) {
+        if ($tInM >= $zahlen[0][0] && $tInM <= $zahlen[0][1]) {
           $output = 'Die vorgeschlagene Zeit genügt, um die Methode ' . $name . ' durchzuführen.';
-        } else if ($hInMInt < $zahlen[0][0]) {
+        } else if ($tInM < $zahlen[0][0]) {
           $output = 'Die vorgeschlagene Zeit genügt nicht, um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
-        } else if ($hInMInt > $zahlen[0][1]) {
+        } else if ($tInM > $zahlen[0][1]) {
           $output = 'Die vorgeschlagene Zeit sollte nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
           } else {
           $output = 'Fragen Sie bitte erneut nach';
 
         }
 
-        
-      } else if ((strpos(strtolower($dauer), "tage") !== false) or (strpos(strtolower($dauer), "tag") !== false)) {
-        
-        /*
-        Tage in Minuten umgerechnet mit 1 Tag = 8 Arbeitsstunden und die Zeiteinheit wird herausgefiltert
-        */ 
-        $dauerZahl = str_replace(array('tag'), '', $dauer);
-        $TinMin = 8 * 60;
-
-        if ($dauerZahl > 0) {
-          $TinMin = 8 * 60 * $dauerZahl;
-        }
-        $TinMinInt = $TinMin + 0;
-         /*
-        Abfrage wird mit den Rahmenzeiten verglichen und es wird eine Antwort gewählt
-        */ 
-        if ($TinMinInt >= $zahlen[0][0] && $TinMinInt <= $zahlen[0][1]) {
-          $output = ' Die vorgeschlagene Zeit genügt, um die Methode ' . $name . ' durchzuführen.';
-        } else if ($TinMinInt < $zahlen[0][0]) {
-          $output = ' Die vorgeschlagene Zeit genügt nicht, um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
-        } else if ($TinMinInt > $zahlen[0][1]) {
-          $output = ' Die vorgeschlagene Zeit sollte nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
-          } else {
-          $output = 'Fragen Sie bitte erneut nach';
-
-        }
         
       } else if ((strpos(strtolower($dauer), "woche") !== false) or (strpos(strtolower($dauer), "wochen") !== false)) {
-        $dauerZahl = str_replace(array('woche'), '', $dauer);
-        $wInMin = 8 * 60 * 5;
-         /*
-        Wochen in Minuten umgerechnet mit 1 Woche = 8 Stunden pro Tag und 5 Tage und die Zeiteinheit wird herausgefiltert
+        
+        /*
+        Woche in Minuten umgerechnet mit 1 Woche = 5 Arbeitstage
         */ 
-        if ($dauerZahl > 0) {
-          $wInMin = 8 * 60 * 5 * $dauerZahl;
-        }
-        $wInMinInt = $wInMin + 0;
+
+        $test .= "woche eingegeben";
+        $wInMin = $menge * 60 * 8 * 5;
 
          /*
         Abfrage wird mit den Rahmenzeiten verglichen und es wird eine Antwort gewählt
         */ 
-        if ($wInMinInt >= $zahlen[0][0] && $wInMinInt <= $zahlen[0][1]) {
+        if ($wInMin >= $zahlen[0][0] && $wInMin <= $zahlen[0][1]) {
+          $output = ' Die vorgeschlagene Zeit genügt, um die Methode ' . $name . ' durchzuführen.';
+        } else if ($wInMin < $zahlen[0][0]) {
+          $output = ' Die vorgeschlagene Zeit genügt nicht, um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
+        } else if ($wInMin > $zahlen[0][1]) {
+          $output = ' Die vorgeschlagene Zeit sollte nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
+          } else {
+          $output = 'Fragen Sie bitte erneut nach';
+
+        }
+        
+      } else if ((strpos(strtolower($dauer), "monat") !== false) or (strpos(strtolower($dauer), "monate") !== false)) {
+
+        $test .= "monat eingegeben";
+        /*
+        Monate in Minuten umgerechnet mit 1 Monat = 4 Wochen mit 5 Tage die Woche und 8 Stunden pro Tag 
+        */ 
+        
+        $mInMin = $menge * 60 * 8 * 5 * 4;
+
+         /*
+        Abfrage wird mit den Rahmenzeiten verglichen und es wird eine Antwort gewählt
+        */ 
+        if ($mInMin >= $zahlen[0][0] && $mInMin <= $zahlen[0][1]) {
           $output = 'Die vorgeschlagene Zeit genügt, um um die Methode ' . $name . ' durchzuführen.';
-        } else if ($wInMinInt < $zahlen[0][0]) {
+        } else if ($mInMin < $zahlen[0][0]) {
           $output = 'Die vorgeschlagene Zeit genügt nicht, um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
-        } else if ($wInMinInt > $zahlen[0][1]) {
+        } else if ($mInMin > $zahlen[0][1]) {
           $output = ' Die vorgeschlagene Zeit sollte nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
           } else {
           $output = 'Fragen Sie bitte erneut nach';
 
         }
       }
-
-      //$output = "neu";
-      $dauerInt = $dauer + 0;
-      /*
-     Abfrage wird mit den Rahmenzeiten verglichen und es wird eine Antwort gewählt
-     */ 
-     if ($dauerInt >= $zahlen[0][0] && $dauerInt <= $zahlen[0][1]) {
-
-       $output = 'Die vorgeschlagene Zeit genügt, um die Methode ' . $name . ' durchzuführen.';
-    
-      } else if ($dauerInt < $zahlen[0][0]) {
-
-       $output = ' Die vorgeschlagene Zeit genügt nicht, um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
-     
-      } else if ($dauerInt > $zahlen[0][1]) {
-       
-        $output = ' Die vorgeschlagene Zeit sollte nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
-      
-      } else {
-      
-        $output = 'Fragen Sie bitte erneut nach';
-
-     }
-
-
 
 
       $test .= " min: " . $zahlen[0][0] . " max: " . $zahlen[0][1] . " dauer: " . $dauer . " output: " . $output;
@@ -383,39 +305,9 @@ class InfoIntent extends IntentPluginBase {
       return $output;
     }
 
-    public function getHilfsmittel ($name, $hilfsmittel, $alleMethoden) {
+    // prüft ob mehr als die angefragten Hilfmittel benötigt werden
+    public function getHilfsmittel ($name, $hilfsmittel) {
       $output = '';
-
-      foreach ($alleMethoden as $element) {
-
-        $elementFil = str_replace(array( '(', ')', ',', '/'), '', $element);
-        $elementFilter = str_replace(array('-', '   ' ), ' ', $elementFil);
-       
-
-        if (strpos(strtolower($elementFilter), strtolower($name)) !== false) {
-
-          $name =  $element;
-        
-        }
-
-        if (strpos(strtolower($name), strtolower('sechs w. methode empathize')) !== false) {
-
-          $name = '6 W-Methode (Empathize)';
-
-        }
-
-        
-
-        if (strpos(strtolower($name), strtolower('fünf warum-technik define')) !== false) {
-
-          $name = '5-Warum-Technik (Define)';
-
-        }
-
-        $test .= ' ' . $element;
-
-
-      }
 
 
       /*
@@ -441,8 +333,18 @@ class InfoIntent extends IntentPluginBase {
         $title = $node->getTitle();
         $text = strip_tags($node->get('field_hilfsmittel')->value, '<p></p>');
 
+        
+        $ausgabe_title = $node->getTitle();
+        // Entferne letzten Teil des Titels
+        $split_node_title = explode("(", $node_title);
+        //Output
+        array_push($array,trim($split_node_title[0]));
+
       }
       $textGefiltert = str_replace(array('<p>', '&nbsp;', '</p>', ',', '.'), ' ', $text);
+
+
+      
 
       /*
       Liste mit HIlfsmitteln wird mit dem Text verglichen
@@ -472,13 +374,13 @@ class InfoIntent extends IntentPluginBase {
       */
       if ($anzahl == $angefragt) {
 
-        $output = $hilfsmittel . ' genügt um die Methode ' . $name . ' zu bearbeiten';
+        $output = $hilfsmittel . ' genügt um die Methode ' . $split_node_title[0] . ' zu bearbeiten';
 
       } else if ($anzahl > $angefragt) {
         /*
         Falls nicht alle Hilfsmittel angefragt wurden. Außerdem werden die benötigten hilfsmittel angegeben
         */
-        $output = $hilfsmittel . ' genügt nicht, um die Methode ' . $name . ' zu bearbeiten. Es werden die Hilfsmittel ' . $benötigt . ' benötigt.';
+        $output = $hilfsmittel . ' genügt nicht, um die Methode ' . $split_node_title[0] . ' zu bearbeiten. Es werden die Hilfsmittel ' . $benötigt . ' benötigt.';
 
       }
 
@@ -487,39 +389,8 @@ class InfoIntent extends IntentPluginBase {
     }
 
 
-    //gibt alle Informationen zu einer Methode aus in der Reihenfolge wie sie auf der Webseite ist
-    public function getAllInfos ($name, $alleMethoden) {
-      
-      foreach ($alleMethoden as $element) {
-
-        $elementFil = str_replace(array( '(', ')', ',', '/'), '', $element);
-        $elementFilter = str_replace(array('-', '   ' ), ' ', $elementFil);
-       
-
-        if (strpos(strtolower($elementFilter), strtolower($name)) !== false) {
-
-          $name =  $element;
-        
-        }
-
-        if (strpos(strtolower($name), strtolower('sechs w. methode empathize')) !== false) {
-
-          $name = '6 W-Methode (Empathize)';
-
-        }
-
-        
-
-        if (strpos(strtolower($name), strtolower('fünf warum-technik define')) !== false) {
-
-          $name = '5-Warum-Technik (Define)';
-
-        }
-
-        $test .= ' ' . $element;
-
-
-      }
+    //gibt alle Informationen zu einer Methode aus 
+    public function getAllInfos ($name) {
 
       $output = '';
       
@@ -538,7 +409,15 @@ class InfoIntent extends IntentPluginBase {
       foreach ($entity_ids as $nid) {
         $node = Node::load($nid);
         $title = $node->getTitle();
-        $output = 'Die Methode ' . $title . ' wird beschreiben als: ' . strip_tags($node->get('body')->value, '<p></p>');
+
+        
+        $node_title = $node->getTitle();
+        // Entferne letzten Teil des Titels
+        $split_node_title = explode("(", $node_title);
+        //Output
+        array_push($array,trim($split_node_title[0]));
+
+        $output = 'Die Methode ' . $split_node_title[0] . ' wird beschrieben als: ' . strip_tags($node->get('body')->value, '<p></p>');
 
       }
 
@@ -549,7 +428,14 @@ class InfoIntent extends IntentPluginBase {
         foreach ($entity_ids as $nid) {
           $node = Node::load($nid);
           $title = $node->getTitle();
-          $output .= ' ' . $infoKategorien1[$i] . ' von ' . $title . ': ';
+
+          $node_title = $node->getTitle();
+          // Entferne letzten Teil des Titels
+          $split_node_title = explode("(", $node_title);
+          //Output
+          array_push($array,trim($split_node_title[0]));
+
+          $output .= ' ' . $infoKategorien1[$i] . ' von ' . $split_node_title[0] . ': ';
           $output .= strip_tags($node->get('field_'. $infoKategorien1[$i])->value, '<p></p>');
           
         }
@@ -561,7 +447,7 @@ class InfoIntent extends IntentPluginBase {
 
         $node = Node::load($nid);
         $title = $node->getTitle();
-        $output .= 'Die benötigte Zeit für ' . $title . ' beträgt: ';
+        $output .= 'Die benötigte Zeit für ' . $name . ' beträgt: ';
         $output .= strip_tags($node->get('field_benoetigte_zeit')->value, '<p></p>');
 
       }
@@ -570,8 +456,15 @@ class InfoIntent extends IntentPluginBase {
         
         foreach ($entity_ids as $nid) {
           $node = Node::load($nid);
+
+          $node_title = $node->getTitle();
+          // Entferne letzten Teil des Titels
+          $split_node_title = explode("(", $node_title);
+          //Output
+          array_push($array,trim($split_node_title[0]));
+
           $title = $node->getTitle();
-          $output .= ' ' . $infoKategorien2[$i] . ' von ' . $title . ': ';
+          $output .= ' ' . $infoKategorien2[$i] . ' von ' . $split_node_title[0] . ': ';
           $output .= strip_tags($node->get('field_'. $infoKategorien2[$i])->value, '<p></p>');
           
         }
@@ -592,39 +485,7 @@ class InfoIntent extends IntentPluginBase {
 
     
     //gibt die vom Nutzer angefragen Informatinoskategorien zu einer Methode wieder
-    public function getMethodInfo ($name, $info, $alleMethoden) {
-
-
-      foreach ($alleMethoden as $element) {
-
-        $elementFil = str_replace(array( '(', ')', ',', '/'), '', $element);
-        $elementFilter = str_replace(array('-', '   ' ), ' ', $elementFil);
-        $test .= ' ' . $elementFilter;
-
-        if (strpos(strtolower($elementFilter), strtolower($name)) !== false) {
-
-          $name =  $element;
-          
-        }
-
-        if (strpos(strtolower($name), strtolower('sechs w. methode empathize')) !== false) {
-
-          $name = '6 W-Methode (Empathize)';
-
-        }
-
-        
-
-        if (strpos(strtolower($name), strtolower('5 warum-technik define')) !== false) {
-
-          $name = '5-Warum-Technik (Define)';
-
-        }
-
-        
-
-
-      }
+    public function getMethodInfo ($name, $info) {
 
       $output = '';
       $infoKategorien = array('ziele', 'beteiligte', 'hilfsmittel', 'vorteile', 'nachteile', 'beispiel', 'vorgehen', 'phase', 'raum');
@@ -650,12 +511,20 @@ class InfoIntent extends IntentPluginBase {
             
             foreach ($entity_ids as $nid) {
               $node = Node::load($nid);
-              $title = $node->getTitle();
-              $output .= 'Die ' . $infoKategorien[$i] . ' von ' . $title . ': ';
+              //$title = $node->getTitle();
+
+              $node_title = $node->getTitle();
+              // Entferne letzten Teil des Titels
+              $split_node_title = explode("(", $node_title);
+              //Output
+              array_push($array,trim($split_node_title[0]));
+
+              $output .= 'Die ' . $infoKategorien[$i] . ' von ' . $split_node_title[0] . ': ';
               $output .= strip_tags($node->get('field_'. $infoKategorien[$i])->value, '<p></p>');
               
             }
             
+
           }
           //falls nach der benögigten Zeit gefragt wird
           if ((strpos($info, $zeit) !== false)) {
@@ -666,7 +535,14 @@ class InfoIntent extends IntentPluginBase {
               
               //sorgt dafür, dass die benötigte Zeit nicht merhmals ausgegeben wird
               if($iteration == 0) {
-                $output .= 'Die benötigte Zeit für ' . $title . ' beträgt: ';
+
+                $node_title = $node->getTitle();
+                // Entferne letzten Teil des Titels
+                $split_node_title = explode("(", $node_title);
+                //Output
+                array_push($array,trim($split_node_title[0]));
+
+                $output .= 'Die benötigte Zeit für ' . $split_node_title[0] . ' beträgt: ';
                 $output .= strip_tags($node->get('field_benoetigte_zeit')->value, '<p></p>');
                 $iteration++;
               }

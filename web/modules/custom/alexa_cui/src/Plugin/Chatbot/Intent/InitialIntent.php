@@ -28,6 +28,8 @@ class InitialIntent extends IntentPluginBase {
       $slot_benutzen = $this->request->getIntentSlot('Benutzen');
       $slot_zsm = $this->request->getIntentSlot('Zsm');
         
+
+      //Je nachdem welche Slots ausgelesen werden, wird eine andere Methode aufgerufen  
       if (!empty($slot_benutzen)) {
 
         $output = $this->getBenutzung();
@@ -38,7 +40,7 @@ class InitialIntent extends IntentPluginBase {
 
       }
 
-      
+      //Falls keine Informationen zu der Anfrage gefunden wurde wird dieser Output angegeben
       if (strpos(strtolower($output), strtolower('')) !== false) {
 
         $ouptut = "Ich habe dich leider nicht verstanden kannst du bitte deine Frage wiederholen?";
@@ -49,8 +51,9 @@ class InitialIntent extends IntentPluginBase {
       
     }
 
+    //Gibt wieder was die Methode weiß und wie sie genutzt werden kann
     public function getZusammenfassung () {
-      // 70 durch variable ersetzen
+      // Die Anzahl der bekannten Methoden
       $anzahl = 70;
       $output = 'Hallo, Freut mich, dass du dich für Design Thinking interessierst. 
       Ich kann dir einen guten Einblick in verschiedene Themenfelder des Design Thinking geben. 
@@ -60,7 +63,7 @@ class InitialIntent extends IntentPluginBase {
       Thinking Prozesses zum Einsatz kommen. Ich kann ' . $anzahl . ' Methoden voneinander unterscheiden und vorstellen.
       Möchtest du, dass ich dir allgemein etwas über Design Thinking erzähle, so stelle mir einfach beispielsweise folgende Frage: 
       Ich möchte wissen was Design Thinking ist.
-      Möchtest du, dass ich dir unterschiedliche Methoden aufzähle, so frag mich einfach Beispeilsweise wie folgt: 
+      Möchtest du, dass ich dir unterschiedliche Methoden aufzähle, so frag mich einfachielsweise wie folgt: 
       Welche Methoden des Design Thinking kennst du?
       Möchtest du, dass ich dir bestimmte Methoden vorschlage, so stelle einfach beispielsweise folgende Frage:
       Zähle mir alle Design Thinking Methoden aus der Phase X auf, die länger als X dauern?
@@ -77,12 +80,13 @@ class InitialIntent extends IntentPluginBase {
 
     }
 
+    //Gibt wieder wie die Methode genuttz werden kann
     public function getBenutzung () {
       
       $output = ' Um mit mir zu kommunizieren, musst du mir Fragen zu einzelnen Bestandteilen stellen.
       Möchtest du, dass ich dir allgemein etwas über Design Thinking erzähle, so stelle mir einfach beispielsweise folgende Frage:
       Ich möchte wissen was Design Thinking ist.
-      Möchtest du, dass ich dir unterschiedliche Methoden aufzähle, so frag mich einfach Beispeilsweise wie folgt:
+      Möchtest du, dass ich dir unterschiedliche Methoden aufzähle, so frag mich einfach Beispielsweise wie folgt:
       Welche Methoden des Design Thinking kennst du?
       Möchtest du, dass ich dir bestimmte Methoden vorschlage, so stelle einfach beispielsweise folgende Frage: 
       Zähle mir alle Design Thinking Methoden aus der Phase X auf, die länger als X dauern?
