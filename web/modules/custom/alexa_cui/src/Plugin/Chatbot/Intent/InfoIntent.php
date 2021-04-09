@@ -65,7 +65,7 @@ class InfoIntent extends IntentPluginBase {
       //Je nachdem welche Slots ausgelesen werden, wird eine andere Methode aufgerufen  
       if (!empty($slot_alle)) {
 
-        $output = $this->getAllInfos($slot_name, $alleMethoden);
+        $output = $this->getAllInfos($slot_name);
 
       } else if ((!empty($slot_Menge)) && (!empty($slot_dauer))) {
 
@@ -73,28 +73,33 @@ class InfoIntent extends IntentPluginBase {
 
       } else if (!empty($slot_hilfsmittel)) {
 
-        $output = $this->getHilfsmittel($slot_name, $slot_hilfsmittel, $alleMethoden);
+        $output = $this->getHilfsmittel($slot_name, $slot_hilfsmittel);
 
       } else if (!empty($slot_zsm)) {
 
-        $output = $this->getZusammenfassung($slot_name, $alleMethoden);
+        $output = $this->getZusammenfassung($slot_name);
         
       } else {
 
-        $output = $this->getMethodInfo($slot_name, $slot_info, $alleMethoden);
+        $output = $this->getMethodInfo($slot_name, $slot_info);
 
       } 
 
+      /*
       if ($output == '') {
         $ouptut = 'Ich habe dich leider nicht verstanden. Kannst du deine Frage bitte erneut stellen?';
       }
+      */
 
-      $this->response->setIntentResponse($ouptut);
+      \Drupal::logger("alexa_cui")->notice($slot_name);
+
+      $this->response->setIntentResponse($output);
       
     }
 
     // gibt den Methodennamen ohne eingeklamemrte Objekte wieder
     public function _getCleanMethodename($name) {
+      
       $nids = \Drupal::entityQuery('node')->condition('type','methode')->execute();
       $nodes =  \Drupal\node\Entity\Node::loadMultiple($nids);
 
@@ -103,12 +108,15 @@ class InfoIntent extends IntentPluginBase {
           //$match[1];
           $method = explode('(', $node->title->value);
           $phase = rtrim($method[1], ")");
-          $methods[ strtolower(rtrim($method[0]))] = $node->title->value; 
+          $methods[strtolower(rtrim($method[0]))] = $node->title->value; 
       }
 
       //dsm($name);
       //dsm($methods);
       //dsm($methods[$name]);
+
+
+      \Drupal::logger("alexa_cui")->notice($methods[$name]);
 
       return $methods[$name];
   }
@@ -117,6 +125,7 @@ class InfoIntent extends IntentPluginBase {
   // Fass die Methode zusammen
     public function getZusammenfassung ($name) {
 
+      \Drupal::logger("alexa_cui")->notice($name);
 
       $output = ''; 
       $query = \Drupal::entityQuery('node');
@@ -131,11 +140,11 @@ class InfoIntent extends IntentPluginBase {
         $title = $node->getTitle();
          
         // Entferne letzten Teil des Titels
-        //$split_node_title = explode("(", $title);
+        $split_node_title = explode("(", $title);
         //Output
        // array_push($array,trim($split_node_title[0]));
 
-        $output = 'Die Methode ' . $title . ' wird beschrieben als: ' . strip_tags($node->get('body')->value, '<p></p>');
+        $output = 'Die Methode ' . $split_node_title[0] . ' wird beschrieben als: ' . strip_tags($node->get('body')->value, '<p></p>');
 
       }
 
@@ -151,7 +160,7 @@ class InfoIntent extends IntentPluginBase {
 
       
 
-      return $output; 
+      return $outputGefiltert; 
 
     }
 
@@ -175,7 +184,7 @@ class InfoIntent extends IntentPluginBase {
         // Entferne letzten Teil des Titels
         $split_node_title = explode("(", $title);
         //Output
-        array_push($array,trim($split_node_title[0]));
+       // array_push($array,trim($split_node_title[0]));
 
       }
 
@@ -195,11 +204,11 @@ class InfoIntent extends IntentPluginBase {
         Abfrage wird mit den Rahmenzeiten verglichen und es wird eine Antwort gewählt
         */ 
         if ($menge >= $zahlen[0][0] && $menge <= $zahlen[0][1]) {
-          $output = 'Die vorgeschlagene Zeit genügt, um die Methode ' . $name . ' durchzuführen.';
+          $output = 'Die vorgeschlagene Zeit genügt, um die Methode ' . $split_node_title[0] . ' durchzuführen.';
         } else if ($menge < $zahlen[0][0]) {
-          $output = ' Die vorgeschlagene Zeit genügt nicht um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
+          $output = ' Die vorgeschlagene Zeit genügt nicht um die Methode ' . $split_node_title[0] . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
         } else if ($menge > $zahlen[0][1]) {
-          $output = 'Die vorgeschlagene Zeit sollte nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
+          $output = 'Die vorgeschlagene Zeit sollte nicht für die Methode ' . $split_node_title[0] . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
           } else {
           $output = 'Fragen Sie bitte erneut nach';
 
@@ -216,12 +225,12 @@ class InfoIntent extends IntentPluginBase {
         */ 
         
         if ($HinMin >= $zahlen[0][0] && $HinMin <= $zahlen[0][1]) {
-          $output = 'Die vorgeschlagene Zeit genügt, um die Methode ' . $name . ' durchzuführen.';
+          $output = 'Die vorgeschlagene Zeit genügt, um die Methode ' . $split_node_title[0] . ' durchzuführen.';
         } else if ($HinMin < $zahlen[0][0]) {
 
-          $output = ' Die vorgeschlagene Zeit genügt nicht, um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
+          $output = ' Die vorgeschlagene Zeit genügt nicht, um die Methode ' . $split_node_title[0] . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
         } else if ($HinMin > $zahlen[0][1]) {
-          $output = ' Die vorgeschlagene Zeit sollte nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
+          $output = ' Die vorgeschlagene Zeit sollte nicht für die Methode ' . $split_node_title[0] . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
           } else {
           $output = 'Fragen Sie bitte erneut nach';
 
@@ -241,11 +250,11 @@ class InfoIntent extends IntentPluginBase {
         Abfrage wird mit den Rahmenzeiten verglichen und es wird eine Antwort gewählt
         */ 
         if ($tInM >= $zahlen[0][0] && $tInM <= $zahlen[0][1]) {
-          $output = 'Die vorgeschlagene Zeit genügt, um die Methode ' . $name . ' durchzuführen.';
+          $output = 'Die vorgeschlagene Zeit genügt, um die Methode ' . $split_node_title[0] . ' durchzuführen.';
         } else if ($tInM < $zahlen[0][0]) {
-          $output = 'Die vorgeschlagene Zeit genügt nicht, um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
+          $output = 'Die vorgeschlagene Zeit genügt nicht, um die Methode ' . $split_node_title[0] . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
         } else if ($tInM > $zahlen[0][1]) {
-          $output = 'Die vorgeschlagene Zeit sollte nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
+          $output = 'Die vorgeschlagene Zeit sollte nicht für die Methode ' . $split_node_title[0] . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
           } else {
           $output = 'Fragen Sie bitte erneut nach';
 
@@ -265,11 +274,11 @@ class InfoIntent extends IntentPluginBase {
         Abfrage wird mit den Rahmenzeiten verglichen und es wird eine Antwort gewählt
         */ 
         if ($wInMin >= $zahlen[0][0] && $wInMin <= $zahlen[0][1]) {
-          $output = ' Die vorgeschlagene Zeit genügt, um die Methode ' . $name . ' durchzuführen.';
+          $output = ' Die vorgeschlagene Zeit genügt, um die Methode ' . $split_node_title[0] . ' durchzuführen.';
         } else if ($wInMin < $zahlen[0][0]) {
-          $output = ' Die vorgeschlagene Zeit genügt nicht, um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
+          $output = ' Die vorgeschlagene Zeit genügt nicht, um die Methode ' . $split_node_title[0] . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
         } else if ($wInMin > $zahlen[0][1]) {
-          $output = ' Die vorgeschlagene Zeit sollte nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
+          $output = ' Die vorgeschlagene Zeit sollte nicht für die Methode ' . $split_node_title[0] . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
           } else {
           $output = 'Fragen Sie bitte erneut nach';
 
@@ -288,11 +297,11 @@ class InfoIntent extends IntentPluginBase {
         Abfrage wird mit den Rahmenzeiten verglichen und es wird eine Antwort gewählt
         */ 
         if ($mInMin >= $zahlen[0][0] && $mInMin <= $zahlen[0][1]) {
-          $output = 'Die vorgeschlagene Zeit genügt, um um die Methode ' . $name . ' durchzuführen.';
+          $output = 'Die vorgeschlagene Zeit genügt, um um die Methode ' . $split_node_title[0] . ' durchzuführen.';
         } else if ($mInMin < $zahlen[0][0]) {
-          $output = 'Die vorgeschlagene Zeit genügt nicht, um die Methode ' . $name . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
+          $output = 'Die vorgeschlagene Zeit genügt nicht, um die Methode ' . $split_node_title[0] . ' durchzuführen. Es werden minimal ' . $zahlen[0][0] .  ' Minuten und maximal ' . $zahlen[0][1] . ' Minuten benötigt.';
         } else if ($mInMin > $zahlen[0][1]) {
-          $output = ' Die vorgeschlagene Zeit sollte nicht für die Methode ' . $name . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
+          $output = ' Die vorgeschlagene Zeit sollte nicht für die Methode ' . $split_node_title[0] . ' verwendet werden. Es sollten von ' . $zahlen[0][0] .  ' Minuten bis ' . $zahlen[0][1] . ' Minuten verwendet werden.';
           } else {
           $output = 'Fragen Sie bitte erneut nach';
 
@@ -338,7 +347,7 @@ class InfoIntent extends IntentPluginBase {
         // Entferne letzten Teil des Titels
         $split_node_title = explode("(", $node_title);
         //Output
-        array_push($array,trim($split_node_title[0]));
+        //array_push($array,trim($split_node_title[0]));
 
       }
       $textGefiltert = str_replace(array('<p>', '&nbsp;', '</p>', ',', '.'), ' ', $text);
@@ -409,13 +418,10 @@ class InfoIntent extends IntentPluginBase {
       foreach ($entity_ids as $nid) {
         $node = Node::load($nid);
         $title = $node->getTitle();
-
-        
-        $node_title = $node->getTitle();
         // Entferne letzten Teil des Titels
-        $split_node_title = explode("(", $node_title);
+        $split_node_title = explode("(", $title);
         //Output
-        array_push($array,trim($split_node_title[0]));
+        //array_push($array,trim($split_node_title[0]));
 
         $output = 'Die Methode ' . $split_node_title[0] . ' wird beschrieben als: ' . strip_tags($node->get('body')->value, '<p></p>');
 
@@ -428,14 +434,12 @@ class InfoIntent extends IntentPluginBase {
         foreach ($entity_ids as $nid) {
           $node = Node::load($nid);
           $title = $node->getTitle();
-
-          $node_title = $node->getTitle();
           // Entferne letzten Teil des Titels
-          $split_node_title = explode("(", $node_title);
+          $split_node_title = explode("(", $title);
           //Output
-          array_push($array,trim($split_node_title[0]));
+          //array_push($array,trim($split_node_title[0]));
 
-          $output .= ' ' . $infoKategorien1[$i] . ' von ' . $split_node_title[0] . ': ';
+          $output .= ' ' . $infoKategorien1[$i] . ' von ' . $split_node_title [0] . ': ';
           $output .= strip_tags($node->get('field_'. $infoKategorien1[$i])->value, '<p></p>');
           
         }
@@ -447,7 +451,12 @@ class InfoIntent extends IntentPluginBase {
 
         $node = Node::load($nid);
         $title = $node->getTitle();
-        $output .= 'Die benötigte Zeit für ' . $name . ' beträgt: ';
+        // Entferne letzten Teil des Titels
+        $split_node_title = explode("(", $title);
+        //Output
+        //array_push($array,trim($split_node_title[0]));
+
+        $output .= 'Die benötigte Zeit für ' . $split_node_title[0] . ' beträgt: ';
         $output .= strip_tags($node->get('field_benoetigte_zeit')->value, '<p></p>');
 
       }
@@ -457,11 +466,11 @@ class InfoIntent extends IntentPluginBase {
         foreach ($entity_ids as $nid) {
           $node = Node::load($nid);
 
-          $node_title = $node->getTitle();
+          $title = $node->getTitle();
           // Entferne letzten Teil des Titels
-          $split_node_title = explode("(", $node_title);
+          $split_node_title = explode("(", $title);
           //Output
-          array_push($array,trim($split_node_title[0]));
+          //array_push($array,trim($split_node_title[0]));
 
           $title = $node->getTitle();
           $output .= ' ' . $infoKategorien2[$i] . ' von ' . $split_node_title[0] . ': ';
@@ -487,6 +496,9 @@ class InfoIntent extends IntentPluginBase {
     //gibt die vom Nutzer angefragen Informatinoskategorien zu einer Methode wieder
     public function getMethodInfo ($name, $info) {
 
+      \Drupal::logger("alexa_cui")->notice($name);
+      \Drupal::logger("alexa_cui")->notice($info);
+
       $output = '';
       $infoKategorien = array('ziele', 'beteiligte', 'hilfsmittel', 'vorteile', 'nachteile', 'beispiel', 'vorgehen', 'phase', 'raum');
       $zeit = 'benötigte zeit';
@@ -494,7 +506,6 @@ class InfoIntent extends IntentPluginBase {
       $iteration = 0;
 
       if (!empty($name) && !empty($info)) {
-        
         $query = \Drupal::entityQuery('node');
         $query
         ->condition('type', 'Methode')
@@ -510,15 +521,17 @@ class InfoIntent extends IntentPluginBase {
             
             
             foreach ($entity_ids as $nid) {
+              
               $node = Node::load($nid);
-              //$title = $node->getTitle();
+              $title = $node->getTitle();
 
-              $node_title = $node->getTitle();
+             
+              $title = $node->getTitle();
               // Entferne letzten Teil des Titels
-              $split_node_title = explode("(", $node_title);
+              $split_node_title = explode("(", $title);
               //Output
-              array_push($array,trim($split_node_title[0]));
-
+              //array_push($array,trim($split_node_title[0]));
+              
               $output .= 'Die ' . $infoKategorien[$i] . ' von ' . $split_node_title[0] . ': ';
               $output .= strip_tags($node->get('field_'. $infoKategorien[$i])->value, '<p></p>');
               
@@ -538,9 +551,9 @@ class InfoIntent extends IntentPluginBase {
 
                 $node_title = $node->getTitle();
                 // Entferne letzten Teil des Titels
-                $split_node_title = explode("(", $node_title);
+                $split_node_title = explode("(", $title);
                 //Output
-                array_push($array,trim($split_node_title[0]));
+                //array_push($array,trim($split_node_title[0]));
 
                 $output .= 'Die benötigte Zeit für ' . $split_node_title[0] . ' beträgt: ';
                 $output .= strip_tags($node->get('field_benoetigte_zeit')->value, '<p></p>');
@@ -564,10 +577,14 @@ class InfoIntent extends IntentPluginBase {
       
       $outputGefiltert = str_replace(array('<p>', '&nbsp;', '</p>'), ' ', $output);
 
+      /*
       if ( $output = '') {
         $outputGefiltert = 'Ich habe leider keine Antwort für deine Frage gefunden. Kannst du bitte erneut nachfragen oder eine andere Frage stellen?';
       }
-      
+      */
+
+
+
       return $outputGefiltert;
     }
     
