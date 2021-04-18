@@ -22,7 +22,8 @@ class InitialIntent extends IntentPluginBase {
   */
     public function process() {
       
-      $output = '';
+      //Falls keine Informationen zu der Anfrage gefunden wurde wird dieser Output angegeben
+      $output = 'Ich habe dich leider nicht verstanden kannst du bitte deine Frage wiederholen?';
 
       //liest die Slots aus 
       $slot_benutzen = $this->request->getIntentSlot('Benutzen');
@@ -39,14 +40,7 @@ class InitialIntent extends IntentPluginBase {
         $output = $this->getZusammenfassung();
 
       }
-
-      //Falls keine Informationen zu der Anfrage gefunden wurde wird dieser Output angegeben
-      if (strpos(strtolower($output), strtolower('')) !== false) {
-
-        $ouptut = "Ich habe dich leider nicht verstanden kannst du bitte deine Frage wiederholen?";
-      
-      }
-      
+   
       $this->response->setIntentResponse($output);
       
     }

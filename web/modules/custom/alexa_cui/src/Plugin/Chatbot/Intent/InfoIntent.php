@@ -60,6 +60,7 @@ class InfoIntent extends IntentPluginBase {
       }
       */
 
+      //$ouptut = 'Ich habe dich leider nicht verstanden. Kannst du deine Frage bitte erneut stellen?';
 
 
       //Je nachdem welche Slots ausgelesen werden, wird eine andere Methode aufgerufen  
@@ -85,38 +86,33 @@ class InfoIntent extends IntentPluginBase {
 
       } 
 
-      /*
-      if ($output == '') {
-        $ouptut = 'Ich habe dich leider nicht verstanden. Kannst du deine Frage bitte erneut stellen?';
-      }
-      */
-
-      \Drupal::logger("alexa_cui")->notice($slot_name);
-
       $this->response->setIntentResponse($output);
       
     }
 
     // gibt den Methodennamen ohne eingeklamemrte Objekte wieder
     public function _getCleanMethodename($name) {
+
+        $nids = \Drupal::entityQuery('node')->condition('type','methode')->execute();
+        $nodes =  \Drupal\node\Entity\Node::loadMultiple($nids);
+  
+        foreach($nodes as $node) {
+            //preg_match('#\((.*?)\)#', $node->title->value, $match);
+            //$match[1];
+            $method = explode('(', $node->title->value);
+            $phase = rtrim($method[1], ")");
+            $methods[strtolower(rtrim($method[0]))] = $node->title->value; 
+        }
+  
+        //dsm($name);
+        //dsm($methods);
+        //dsm($methods[$name]);
+  
+  
+        //\Drupal::logger("alexa_cui")->notice($methods[$name]);
+
+
       
-      $nids = \Drupal::entityQuery('node')->condition('type','methode')->execute();
-      $nodes =  \Drupal\node\Entity\Node::loadMultiple($nids);
-
-      foreach($nodes as $node) {
-          //preg_match('#\((.*?)\)#', $node->title->value, $match);
-          //$match[1];
-          $method = explode('(', $node->title->value);
-          $phase = rtrim($method[1], ")");
-          $methods[strtolower(rtrim($method[0]))] = $node->title->value; 
-      }
-
-      //dsm($name);
-      //dsm($methods);
-      //dsm($methods[$name]);
-
-
-      \Drupal::logger("alexa_cui")->notice($methods[$name]);
 
       return $methods[$name];
   }
@@ -125,7 +121,7 @@ class InfoIntent extends IntentPluginBase {
   // Fass die Methode zusammen
     public function getZusammenfassung ($name) {
 
-      \Drupal::logger("alexa_cui")->notice($name);
+      //\Drupal::logger("alexa_cui")->notice($name);
 
       $output = ''; 
       $query = \Drupal::entityQuery('node');
@@ -496,8 +492,8 @@ class InfoIntent extends IntentPluginBase {
     //gibt die vom Nutzer angefragen Informatinoskategorien zu einer Methode wieder
     public function getMethodInfo ($name, $info) {
 
-      \Drupal::logger("alexa_cui")->notice($name);
-      \Drupal::logger("alexa_cui")->notice($info);
+      // \Drupal::logger("alexa_cui")->notice($name);
+      //\Drupal::logger("alexa_cui")->notice($info);
 
       $output = '';
       $infoKategorien = array('ziele', 'beteiligte', 'hilfsmittel', 'vorteile', 'nachteile', 'beispiel', 'vorgehen', 'phase', 'raum');
@@ -570,10 +566,13 @@ class InfoIntent extends IntentPluginBase {
           $output = 'Es ist keine Information hierzu vorhanden.';
         }
         
-        $output .= ' Kann ich dir weitere Informationen zu einer Methode geben?';
+        $output .= 'Falls Sie weitere Informationen zu einer Methode haben möchten, können Sie gerne eine andere Frage stellen.';
+     
       } else {
-        $output = 'Die angeforderte Information kann ich nicht finden. Kann ich dir Informationen zu einer anderen Methode geben?';
-        }
+
+        $output = 'Die angeforderte Information kann ich nicht finden. Sie können gerne eine andere Frage stellen.';
+        
+      }
       
       $outputGefiltert = str_replace(array('<p>', '&nbsp;', '</p>'), ' ', $output);
 
